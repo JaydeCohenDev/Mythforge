@@ -1,0 +1,22 @@
+body {
+  margin: 0;
+  min-width: 100vw;
+  min-height: 100vh;
+  background-color: #111;
+
+  overflow: hidden;
+  cursor: none;
+}
+
+* {
+  font-family: "Courier Prime", monospace;
+
+}
+
+input {
+  cursor: none;
+}
+
+pre {
+  line-height: 1px;
+}
