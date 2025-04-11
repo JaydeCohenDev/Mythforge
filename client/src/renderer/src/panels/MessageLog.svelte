@@ -18,7 +18,7 @@
         });
     };
 
-    onMount(async () => {
+    const initializeConnection = async () => {
         const con = await connect();
 
         const resizeObserver = new ResizeObserver(() => {
@@ -45,7 +45,7 @@
 
         con.on('ShowOptions', async (options) => {
             console.log(options);
-            let prom = new Promise((resolve, reject) => {
+            let prom = new Promise((resolve, _) => {
                 console.log('WORKD!');
                 const callback = (selection) => {
                     console.log(selection);
@@ -63,6 +63,10 @@
 
             return prom;
         });
+    };
+
+    onMount(async () => {
+        await initializeConnection();
     });
 
     const submit = async (e) => {

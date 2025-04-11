@@ -6,14 +6,15 @@ public class Region
 {
     public static readonly Dictionary<string, Region> All = [];
 
+    public int Id { get; set; }
     public string Name { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
     public List<Room> Rooms { get; set; } = [];
 
     protected Room AddRoom(Room room)
     {
-        room.Id = $"{Name.ToId()}.{room.Name.ToId()}";
-        Room.All.Add(room.Id, room);
+        // room.Id = $"{Name.ToId()}.{room.Name.ToId()}";
+        // Room.All.Add(room.Id, room);
         Rooms.Add(room);
         return room;
     }

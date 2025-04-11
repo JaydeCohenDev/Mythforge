@@ -1,10 +1,13 @@
 
 
 using GameServer.Core;
+using GameServer.Core.Database;
 using GameServer.Hubs;
 using Microsoft.AspNetCore.SignalR;
 
 WebApplicationBuilder? builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<GameDbContext>();
 
 builder.Services.AddCors(options =>
 {
@@ -29,6 +32,7 @@ app.MapGet("/", () => "Hello World!");
 app.MapHub<GameHub>("/game");
 
 IHubContext<GameHub>? hub = app.Services.GetService<IHubContext<GameHub>>();
+
 
 Game.HubContext = hub!;
 Game.Init();

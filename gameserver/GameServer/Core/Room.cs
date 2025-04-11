@@ -1,5 +1,6 @@
 
 
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Numerics;
 using System.Runtime.Serialization;
 using System.Text.Json;
@@ -15,7 +16,7 @@ public class Room
 {
     public static readonly Dictionary<string, Room> All = [];
 
-    public string Id { get; set; } = string.Empty;
+    public int Id { get; set; }
     public string Name { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
     [JsonConverter(typeof(TagListJsonConverter<RoomTags>))]
@@ -23,7 +24,7 @@ public class Room
     public List<Entity> Entities { get; init; } = [];
 
     [JsonConverter(typeof(RoomListJsonConverter))]
-    public List<Room> Exits { get; init; } = [];
+    public List<Room> Exits { get; } = [];
 
     public Room()
     {
@@ -68,7 +69,7 @@ internal class RoomListJsonConverter : JsonConverter<List<Room>>
         writer.WriteStartArray();
         foreach (Room? room in value)
         {
-            writer.WriteStringValue(room.Id);
+            //writer.WriteStringValue(room.Id);
         }
         writer.WriteEndArray();
     }

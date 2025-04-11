@@ -1,45 +1,66 @@
 
 using System.Text.Json;
 using GameServer.Core;
+using GameServer.Core.Auth;
+using GameServer.Core.Flows;
+using GameServer.Core.Messaging;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 
 namespace GameServer.Hubs;
 
+public class PlayerSession
+{
+    public string ConnectionId { get; set; }
+
+    public IFlow CurrentFlow { get; set; }
+
+    public Dictionary<string, object> TempData { get; set; } = new();
+
+    public string Name { get; set; }
+    public Account Account { get; set; }
+
+    public bool IsLoggedIn => Account != null;
+
+    public string CurrentRoomId { get; set; }
+}
+
 public class GameHub : Hub
 {
+    private static readonly Dictionary<string, PlayerSession> Sessions = new();
+    private readonly FlowManager _flowManager = new();
+    
+    public override async Task OnConnectedAsync()
+    {
+        var session = new PlayerSession
+        {
+            ConnectionId = Context.ConnectionId,
+        };
+        Sessions[Context.ConnectionId] = session;
+
+        await _flowManager.StartFlow(session, Clients.Caller, LoginFlow.Build());
+    }
+    
     public override Task OnDisconnectedAsync(Exception? exception)
     {
-        Game.OnPlayerDisconnected?.Invoke(Context.ConnectionId);
-
-        return base.OnDisconnectedAsync(exception);
+        Sessions.Remove(Context.ConnectionId);
+        return Task.CompletedTask;
     }
 
-    public override Task OnConnectedAsync()
+    public async Task SendInput(string userInput)
     {
-        Console.WriteLine(Context.ConnectionId);
-        Game.OnPlayerConnected?.Invoke(Context.ConnectionId);
-
-        return base.OnConnectedAsync();
-    }
-
-    public Task SendInput(string userInput)
-    {
-        Console.WriteLine(userInput);
-        Player player = Player.All[Context.ConnectionId];
-
-        string commandName = userInput.Split(" ").First();
-        string[] args = userInput.Split(" ").Skip(1).ToArray();
-
-        ICommand? command = Game.FindCommand(commandName);
-        if (command is not null)
+        if (!Sessions.TryGetValue(Context.ConnectionId, out PlayerSession? session))
         {
-            command.Execute(player, args);
-            return Task.CompletedTask;
+            await Clients.Caller.SendAsync("ShowMessage", "Your session could not be found. Please reconnect.");
+            return;
         }
 
-        Clients.Caller.SendAsync("ShowMessage", "Command not found");
-        return Task.CompletedTask;
-
+        await _flowManager.HandleInput(session, Clients.Caller, userInput);
+    }
+    
+    private async Task HandleGameInput(PlayerSession session, string input)
+    {
+        
     }
 
     public Task<string> GetRegion(string regionId)

@@ -1,4 +1,5 @@
 
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace GameServer.Core;
@@ -9,10 +10,15 @@ public class Entity
     public string Name { get; set; } = string.Empty;
     public string? PressenceText { get; set; }
     public string Description { get; set; } = string.Empty;
+    
+    [NotMapped]
     public List<EntityTrait> Traits { get; init; } = [];
 
     [JsonIgnore]
+    [NotMapped]
     public Room? CurrentRoom { get; private set; }
+    
+    public List<string> Scripts { get; set; } = [];
 
     public virtual void Tick()
     {
