@@ -9,13 +9,6 @@ const api = {
   }
 }
 
-// contextBridge.exposeInMainWorld("electronApi", {
-//   getOmniSharpProcess: () => {
-//     const omnisharpPath = path.join(__dirname, 'electron-resources', 'omnisharp', 'OmniSharp.exe');
-//     return spawn(omnisharpPath, ['-lsp']);
-//   }
-// })
-
 
 // Use `contextBridge` APIs to expose Electron APIs to
 // renderer only if context isolation is enabled, otherwise
