@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { mount, onMount } from 'svelte';
+    import { mount, onDestroy, onMount } from 'svelte';
     import { connect } from '../lib/connect';
     import LogMessage from '../components/Log/LogMessage.svelte';
     import { setCursor } from '../lib/cursor';
@@ -8,6 +8,9 @@
     var userInput = $state('');
     var messagesEl: HTMLElement;
     var inputEl: HTMLInputElement;
+
+    const history: string[] = [];
+    var historyIndex = 0;
 
     const showMessage = (message) => {
         mount(LogMessage, {
@@ -72,8 +75,24 @@
         });
     };
 
+    const keyEvent = (e) => {
+        if (e.key === 'ArrowUp') {
+            userInput = history[history.length - historyIndex - 1];
+            historyIndex++;
+        } else if (e.key == 'ArrowDown') {
+            userInput = history[history.length - historyIndex - 1];
+            historyIndex--;
+        }
+    };
+
     onMount(async () => {
         await initializeConnection();
+
+        window.addEventListener('keydown', keyEvent);
+    });
+
+    onDestroy(() => {
+        window.removeEventListener('keydown', keyEvent);
     });
 
     const submit = async (e) => {
@@ -83,6 +102,8 @@
         var con = await connect();
 
         await con.invoke('SendInput', userInput);
+        history.push(userInput);
+        historyIndex = 0;
         userInput = '';
     };
 
