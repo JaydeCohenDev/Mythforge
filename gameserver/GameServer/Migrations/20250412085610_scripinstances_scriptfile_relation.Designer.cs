@@ -3,6 +3,7 @@ using System;
 using GameServer.Core.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GameServer.Migrations
 {
     [DbContext(typeof(GameDbContext))]
-    partial class GameDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250412085610_scripinstances_scriptfile_relation")]
+    partial class scripinstances_scriptfile_relation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.4");
@@ -31,10 +34,6 @@ namespace GameServer.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.PrimitiveCollection<string>("Permissions")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
@@ -194,13 +193,8 @@ namespace GameServer.Migrations
                     b.Property<int>("Gold")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("LoginRoomId")
-                        .HasColumnType("INTEGER");
-
                     b.HasIndex("AccountId")
                         .IsUnique();
-
-                    b.HasIndex("LoginRoomId");
 
                     b.ToTable("Players", (string)null);
                 });
@@ -280,15 +274,7 @@ namespace GameServer.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("GameServer.Core.Room", "LoginRoom")
-                        .WithMany()
-                        .HasForeignKey("LoginRoomId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Account");
-
-                    b.Navigation("LoginRoom");
                 });
 
             modelBuilder.Entity("GameServer.Core.Auth.Account", b =>

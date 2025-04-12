@@ -18,9 +18,10 @@ public class RoomTagSpawnCondition : SpawnCondition
 
     public override bool CanSpawn(Room room)
     {
-        foreach (RoomTags tag in _requiredTags)
-            if (!room.Tags.Contains(tag))
-                return false;
+        return false;
+        // foreach (RoomTags tag in _requiredTags)
+        //     if (!room.Tags.Contains(tag))
+        //         return false;
 
         return true;
     }

@@ -1,4 +1,5 @@
-﻿using GameServer.Core.Messaging;
+﻿using GameServer.Core.Auth;
+using GameServer.Core.Messaging;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 
@@ -36,7 +37,10 @@ public static class LoginFlow
                     session.TempData["name"] = input;
                     session.Name = input;
                     
-                    var account = await World.Db.Accounts.FirstOrDefaultAsync(a =>
+                    
+                    
+                    Account? account = await World.Db.Accounts
+                        .FirstOrDefaultAsync(a =>
                         a.Name == session.Name);
 
                     if (account is null)
@@ -47,6 +51,9 @@ public static class LoginFlow
                         return;
                         
                     }
+                    
+                    
+                    
 
                     session.Account = account;
                 })
@@ -55,7 +62,15 @@ public static class LoginFlow
                 {
                     if (session.Account.Password == input)
                     {
+                        await World.Db.Entry(session.Account).Reference(a => a.Player).LoadAsync();
+                        await World.Db.Entry(session.Account.Player).Reference(p => p.CurrentRoom).LoadAsync();
+                        await World.Db.Entry(session.Account.Player).Reference(p => p.LoginRoom).LoadAsync();
+                        session.Player = session.Account.Player;
+
                         await caller.SendAsync("ShowMessage", "Welcome back, " + session.Name + "!");
+                        
+                        session.Player.LoginRoom.AddEntity(session.Player);
+                        
                         session.CurrentFlow = MainGameFlow.Build();
                     }
                     else

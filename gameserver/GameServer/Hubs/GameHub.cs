@@ -4,6 +4,7 @@ using GameServer.Core;
 using GameServer.Core.Auth;
 using GameServer.Core.Flows;
 using GameServer.Core.Messaging;
+using GameServer.Core.Scripting;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,6 +20,7 @@ public class PlayerSession
 
     public string Name { get; set; }
     public Account Account { get; set; }
+    public Player Player { get; set; }
 
     public bool IsLoggedIn => Account != null;
 
@@ -29,6 +31,10 @@ public class GameHub : Hub
 {
     private static readonly Dictionary<string, PlayerSession> Sessions = new();
     private readonly FlowManager _flowManager = new();
+
+    public static PlayerSession? GetPlayerSession(Player player)
+        => Sessions.FirstOrDefault(
+            s => s.Value.Account == player.Account).Value;
     
     public override async Task OnConnectedAsync()
     {
@@ -41,10 +47,14 @@ public class GameHub : Hub
         await _flowManager.StartFlow(session, Clients.Caller, LoginFlow.Build());
     }
     
-    public override Task OnDisconnectedAsync(Exception? exception)
+    public override async Task OnDisconnectedAsync(Exception? exception)
     {
+        Player player = Sessions[Context.ConnectionId].Player;
+        player.LoginRoom = player.CurrentRoom!;
+        player.CurrentRoom?.Entities.Remove(player);
+        await World.Db.SaveChangesAsync();
+        
         Sessions.Remove(Context.ConnectionId);
-        return Task.CompletedTask;
     }
 
     public async Task SendInput(string userInput)
@@ -57,10 +67,84 @@ public class GameHub : Hub
 
         await _flowManager.HandleInput(session, Clients.Caller, userInput);
     }
-    
-    private async Task HandleGameInput(PlayerSession session, string input)
+
+    public async Task<string> GetScript(string scriptName)
     {
+        ScriptFile? script = await World.Db.Scripts.Include(scriptFile => scriptFile.Author).FirstOrDefaultAsync(s => s.Name == scriptName);
+
+        if (script == null)
+        {
+            return JsonSerializer.Serialize(new
+            {
+                success = false,
+                error = $"Could not find script with name {scriptName}"
+            });
+        }
         
+        return JsonSerializer.Serialize(new
+        {
+            success = true,
+            script.Id,
+            script.Name,
+            Author = script.Author.Name,
+            script.SourceCode,
+        });
+    }
+
+    public async Task<string> UpdateScript(string scriptName, string sourceCode)
+    {
+        ScriptFile? script = await World.Db.Scripts.Include(scriptFile => scriptFile.Author).FirstOrDefaultAsync(s => s.Name == scriptName);
+
+        if (script == null)
+        {
+            return JsonSerializer.Serialize(new
+            {
+                success = false,
+                error = $"Could not find script with name {scriptName}"
+            });
+        }
+        
+        if (script.Author != Sessions.FirstOrDefault(s => s.Value.ConnectionId == Context.ConnectionId).Value.Account)
+        {
+            return JsonSerializer.Serialize(new
+            {
+                success = false,
+                error = $"You do not have permission to edit this script."
+            });
+        }
+        
+        script.SourceCode = sourceCode;
+        await World.Db.SaveChangesAsync();
+        return JsonSerializer.Serialize(new
+        {
+            success = true,
+            script.Id,
+            script.Name,
+            Author = script.Author.Name,
+            script.SourceCode,
+        });
+    }
+
+    public async Task<string> CreateScript(string scriptName)
+    {
+        var script = new ScriptFile
+        {
+            Name = scriptName,
+            Author = Sessions.FirstOrDefault(s => s.Value.ConnectionId == Context.ConnectionId).Value.Account,
+            SourceCode = ""
+        };
+        
+        await World.Db.Scripts.AddAsync(script);
+        await World.Db.SaveChangesAsync();
+        
+        return JsonSerializer.Serialize(new
+        {
+            success = true,
+            script.Id,
+            script.Name,
+            Author = script.Author.Name,
+            script.SourceCode,
+        });
     }
 
     public Task<string> GetRegion(string regionId)

@@ -1,24 +1,24 @@
 
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+using GameServer.Core.Scripting;
 
 namespace GameServer.Core;
 
 public class Entity
 {
     public Guid Id { get; init; }
-    public string Name { get; set; } = string.Empty;
+    public virtual string Name { get; set; } = string.Empty;
     public string? PressenceText { get; set; }
     public string Description { get; set; } = string.Empty;
     
     [NotMapped]
     public List<EntityTrait> Traits { get; init; } = [];
 
+    public List<ScriptInstance> Scripts { get; init; } = [];
+   
     [JsonIgnore]
-    [NotMapped]
     public Room? CurrentRoom { get; private set; }
-    
-    public List<string> Scripts { get; set; } = [];
 
     public virtual void Tick()
     {

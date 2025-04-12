@@ -21,11 +21,16 @@
     "build:linux": "npm run build && electron-builder --linux"
   },
   "dependencies": {
+    "@codingame/monaco-languageclient": "0.17.4",
     "@electron-toolkit/preload": "^3.0.1",
     "@electron-toolkit/utils": "^4.0.0",
     "@microsoft/signalr": "^8.0.7",
     "leaflet": "^1.9.4",
-    "uuid": "^11.1.0"
+    "monaco-editor": "0.43.0",
+    "monaco-languageclient": "^9.5.0",
+    "uuid": "^11.1.0",
+    "vscode-jsonrpc": "6.0.0",
+    "vscode-languageclient": "8.1.0"
   },
   "devDependencies": {
     "@electron-toolkit/eslint-config-prettier": "^3.0.0",

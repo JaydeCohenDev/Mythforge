@@ -1,2 +1,7 @@
 .vscode
 *.db
+/gameserver/.idea
+/client/scripts
+/gameserver/ScriptEngine/obj
+gameserver/GameServer/game.db-shm
+gameserver/GameServer/game.db-wal

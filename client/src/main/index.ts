@@ -2,6 +2,9 @@ import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
+import { UpdateLocalScript } from './scriptManager'
+
+
 
 function createWindow(): void {
   // Create the browser window.
@@ -51,6 +54,12 @@ app.whenReady().then(() => {
 
   // IPC test
   ipcMain.on('ping', () => console.log('pong'))
+  
+  ipcMain.on('get_script', (ev, scriptData) => {
+    var script = JSON.parse(scriptData);
+    console.log(script);
+    UpdateLocalScript(script);
+  })
 
   createWindow()
 

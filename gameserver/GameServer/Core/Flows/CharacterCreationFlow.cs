@@ -1,5 +1,6 @@
 ﻿using GameServer.Core.Auth;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 
 namespace GameServer.Core.Flows;
 
@@ -46,14 +47,32 @@ public static class CharacterCreationFlow
                 var name = session.TempData["name"].ToString();
                 var password = session.TempData["password"].ToString();
 
-                World.Db.Accounts.Add(new Account { Name = name, Password = password });
-                await World.Db.SaveChangesAsync();
+                Console.WriteLine($"Creating new account for {name}");
+                var account = new Account { Name = name, Password = password };
+                World.Db.Accounts.Add(account);
 
+                session.Account = account;
+                
                 session.TempData.Remove("name");
                 session.TempData.Remove("password");
                 
                 await caller.SendAsync("ShowMessage", $"Your pact is sealed, {name}!");
+
+                Console.WriteLine($"Creating new player entity for account {account.Name}");
+                var player = new Player
+                {
+                    Name = name,
+                    Account = account,
+                };
+                var region = await World.Db.Regions.Include(region => region.Rooms)
+                    .FirstOrDefaultAsync();
                 
+                region.Rooms.FirstOrDefault().AddEntity(player);
+                
+                account.Player = player;
+                await World.Db.SaveChangesAsync();
+                
+                session.Player = player;
                 
                 session.CurrentFlow = MainGameFlow.Build();
                 await session.CurrentFlow.Start(session, caller);

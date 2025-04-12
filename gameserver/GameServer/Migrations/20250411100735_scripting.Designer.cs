@@ -3,6 +3,7 @@ using System;
 using GameServer.Core.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GameServer.Migrations
 {
     [DbContext(typeof(GameDbContext))]
-    partial class GameDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250411100735_scripting")]
+    partial class scripting
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.4");
@@ -31,10 +34,6 @@ namespace GameServer.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.PrimitiveCollection<string>("Permissions")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
@@ -125,20 +124,10 @@ namespace GameServer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("AuthorId")
+                    b.Property<int>("AuthorAccountId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("SourceCode")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("AuthorId");
 
                     b.ToTable("Scripts");
                 });
@@ -194,13 +183,8 @@ namespace GameServer.Migrations
                     b.Property<int>("Gold")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("LoginRoomId")
-                        .HasColumnType("INTEGER");
-
                     b.HasIndex("AccountId")
                         .IsUnique();
-
-                    b.HasIndex("LoginRoomId");
 
                     b.ToTable("Players", (string)null);
                 });
@@ -221,17 +205,6 @@ namespace GameServer.Migrations
                         .HasForeignKey("RegionId");
                 });
 
-            modelBuilder.Entity("GameServer.Core.Scripting.ScriptFile", b =>
-                {
-                    b.HasOne("GameServer.Core.Auth.Account", "Author")
-                        .WithMany()
-                        .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Author");
-                });
-
             modelBuilder.Entity("GameServer.Core.Scripting.ScriptInstance", b =>
                 {
                     b.HasOne("GameServer.Core.Entity", null)
@@ -243,7 +216,7 @@ namespace GameServer.Migrations
                         .HasForeignKey("RoomId");
 
                     b.HasOne("GameServer.Core.Scripting.ScriptFile", "ScriptFile")
-                        .WithMany("Instances")
+                        .WithMany()
                         .HasForeignKey("ScriptFileId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -280,15 +253,7 @@ namespace GameServer.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("GameServer.Core.Room", "LoginRoom")
-                        .WithMany()
-                        .HasForeignKey("LoginRoomId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Account");
-
-                    b.Navigation("LoginRoom");
                 });
 
             modelBuilder.Entity("GameServer.Core.Auth.Account", b =>
@@ -312,11 +277,6 @@ namespace GameServer.Migrations
                     b.Navigation("Entities");
 
                     b.Navigation("Scripts");
-                });
-
-            modelBuilder.Entity("GameServer.Core.Scripting.ScriptFile", b =>
-                {
-                    b.Navigation("Instances");
                 });
 #pragma warning restore 612, 618
         }

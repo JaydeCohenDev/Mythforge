@@ -11,14 +11,36 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GameServer.Migrations
 {
     [DbContext(typeof(GameDbContext))]
-    [Migration("20250410045916_RoomExitsNotMapped3")]
-    partial class RoomExitsNotMapped3
+    [Migration("20250411024148_12")]
+    partial class _12
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.4");
+
+            modelBuilder.Entity("GameServer.Core.Auth.Account", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Accounts");
+                });
 
             modelBuilder.Entity("GameServer.Core.Entity", b =>
                 {
@@ -40,11 +62,17 @@ namespace GameServer.Migrations
                     b.Property<int?>("RoomId")
                         .HasColumnType("INTEGER");
 
+                    b.PrimitiveCollection<string>("Scripts")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
                     b.HasIndex("RoomId");
 
                     b.ToTable("Entity");
+
+                    b.UseTptMappingStrategy();
                 });
 
             modelBuilder.Entity("GameServer.Core.Region", b =>
@@ -83,10 +111,7 @@ namespace GameServer.Migrations
                     b.Property<int?>("RegionId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("RoomId")
-                        .HasColumnType("INTEGER");
-
-                    b.PrimitiveCollection<string>("Tags")
+                    b.Property<string>("Tags")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
@@ -94,9 +119,38 @@ namespace GameServer.Migrations
 
                     b.HasIndex("RegionId");
 
+                    b.ToTable("Room");
+                });
+
+            modelBuilder.Entity("RoomLink", b =>
+                {
+                    b.Property<int>("ExitsId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("RoomId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("ExitsId", "RoomId");
+
                     b.HasIndex("RoomId");
 
-                    b.ToTable("Room");
+                    b.ToTable("RoomLink");
+                });
+
+            modelBuilder.Entity("GameServer.Core.Player", b =>
+                {
+                    b.HasBaseType("GameServer.Core.Entity");
+
+                    b.Property<int>("AccountId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Gold")
+                        .HasColumnType("INTEGER");
+
+                    b.HasIndex("AccountId")
+                        .IsUnique();
+
+                    b.ToTable("Players", (string)null);
                 });
 
             modelBuilder.Entity("GameServer.Core.Entity", b =>
@@ -111,10 +165,44 @@ namespace GameServer.Migrations
                     b.HasOne("GameServer.Core.Region", null)
                         .WithMany("Rooms")
                         .HasForeignKey("RegionId");
+                });
+
+            modelBuilder.Entity("RoomLink", b =>
+                {
+                    b.HasOne("GameServer.Core.Room", null)
+                        .WithMany()
+                        .HasForeignKey("ExitsId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("GameServer.Core.Room", null)
-                        .WithMany("Exits")
-                        .HasForeignKey("RoomId");
+                        .WithMany()
+                        .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("GameServer.Core.Player", b =>
+                {
+                    b.HasOne("GameServer.Core.Auth.Account", "Account")
+                        .WithOne("Player")
+                        .HasForeignKey("GameServer.Core.Player", "AccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GameServer.Core.Entity", null)
+                        .WithOne()
+                        .HasForeignKey("GameServer.Core.Player", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Account");
+                });
+
+            modelBuilder.Entity("GameServer.Core.Auth.Account", b =>
+                {
+                    b.Navigation("Player")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("GameServer.Core.Region", b =>
@@ -125,8 +213,6 @@ namespace GameServer.Migrations
             modelBuilder.Entity("GameServer.Core.Room", b =>
                 {
                     b.Navigation("Entities");
-
-                    b.Navigation("Exits");
                 });
 #pragma warning restore 612, 618
         }

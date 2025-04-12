@@ -1,4 +1,4 @@
-using System.Text.Json;
+﻿using System.Text.Json;
 using Microsoft.AspNetCore.SignalR;
 
 namespace GameServer.Core.Dialogue;
@@ -57,9 +57,9 @@ public class DialogueSequence(Denizen Denizen, Player Player) : EventSequence
         await Execute.Invoke(this, Denizen, Player).WaitAsync(cancellationToken);
     }
 
-    public static async Task<DialogueOption?> ShowDialogueOptions(Player palyer, CancellationToken cancellationToken, params DialogueOption[] options)
+    public static async Task<DialogueOption?> ShowDialogueOptions(Player player, CancellationToken cancellationToken, params DialogueOption[] options)
     {
-        ISingleClientProxy? client = Game.HubContext.Clients.Client(palyer.ConnectionId);
+        ISingleClientProxy? client = Game.HubContext.Clients.Client(player.GetConnectionId());
         string message = JsonSerializer.Serialize(new
         {
             Options = options.Select(o => o.Text)

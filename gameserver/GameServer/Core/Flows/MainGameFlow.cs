@@ -15,7 +15,10 @@ public static class MainGameFlow
                 ICommand? command = Game.FindCommand(commandName);
                 if (command is not null)
                 {
-                    //await command.Execute(player, args);
+                    if (!command.CanExecute(session.Player, args))
+                        await session.Player.SendAsync("You lack the required permissions to execute this command.");
+                    else
+                        await command.Execute(session.Player, args);
                     return;
                 }
 

@@ -5,7 +5,7 @@
 namespace GameServer.Migrations
 {
     /// <inheritdoc />
-    public partial class RoomExitsNotMapped3 : Migration
+    public partial class roomtagstostring : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

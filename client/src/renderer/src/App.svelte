@@ -24,5 +24,6 @@
 
 <div style="overflow: hidden">
     <MessageLog />
+
     <Cursor />
 </div>

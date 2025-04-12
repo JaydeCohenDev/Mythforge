@@ -12,7 +12,7 @@ public class Amberfall : Region
         public MarketSquare()
         {
             Name = "Market Square";
-            Tags = [RoomTags.shop, RoomTags.social, RoomTags.trade];
+            //Tags = [RoomTags.shop, RoomTags.social, RoomTags.trade];
             Description =
                 "Stalls of rough wood and faded canvas cluster beneath the golden canopy of overhanging trees. Merchants call out their wares—spiced cider, polished stones, handwoven cloaks—while townsfolk barter under the drifting leaves.";
             Entities =
@@ -62,7 +62,7 @@ public class Amberfall : Region
         public FoxAndFellow()
         {
             Name = "Fox & Fellow";
-            Tags = [RoomTags.inn, RoomTags.social, RoomTags.rest];
+            //Tags = [RoomTags.inn, RoomTags.social, RoomTags.rest];
             Description =
                 "Laughter and low music spill from the tavern’s crooked doorway, its sign bearing a fox and a gentleman in a tricorn hat. The hearth burns bright, and the scent of roast squash and strong cider welcomes you in.";
             Entities =
@@ -111,7 +111,7 @@ public class Amberfall : Region
         public MossAndMortar()
         {
             Name = "Moss & Mortar";
-            Tags = [RoomTags.alchemy, RoomTags.shop, RoomTags.social];
+            //Tags = [RoomTags.alchemy, RoomTags.shop, RoomTags.social];
             Description =
                 "A crooked little shop stuffed with drying herbs, bottled moonlight, and forest oddities. The air buzzes faintly with magic, and a small bell jingles as you enter beneath a branch-bound sign.";
             Entities =
@@ -139,7 +139,7 @@ public class Amberfall : Region
         public SouthshadeLane()
         {
             Name = "Southshade Lane";
-            Tags = [RoomTags.residential, RoomTags.farming, RoomTags.homes];
+            //Tags = [RoomTags.residential, RoomTags.farming, RoomTags.homes];
             Description =
                 "The southern stretch of town is quieter—cobbled paths lined with orchard cottages, chicken coops, and low stone walls. Children play under apple trees while elders sip cider and gossip on worn benches.";
             Entities =
@@ -167,7 +167,7 @@ public class Amberfall : Region
         public Barracks()
         {
             Name = "The Watchman’s Lodge";
-            Tags = [RoomTags.millitary, RoomTags.training, RoomTags.quest];
+            //Tags = [RoomTags.millitary, RoomTags.training, RoomTags.quest];
             Description =
                 "The barracks sit tucked between the orchard’s edge and the watch path. Training dummies lean against the fence, and you hear the clink of armor and barked drills within.";
             Entities =
@@ -202,7 +202,7 @@ public class Amberfall : Region
         public WatchTower()
         {
             Name = "The Timber Crown";
-            Tags = [RoomTags.millitary, RoomTags.exploration, RoomTags.high_ground];
+            //Tags = [RoomTags.millitary, RoomTags.exploration, RoomTags.high_ground];
             Description =
                 "A tall wooden tower rises above the treetops, its frame dark with age but sturdy still. From here, one can see the Emberwood stretching endlessly east—and the winding roads that bring both trade and trouble.";
             Entities =
@@ -230,7 +230,7 @@ public class Amberfall : Region
         public HighbranchRow()
         {
             Name = "Highbranch Row";
-            Tags = [RoomTags.residential, RoomTags.noble, RoomTags.historic];
+            //Tags = [RoomTags.residential, RoomTags.noble, RoomTags.historic];
             Description =
                 "Perched on a low hill, the homes here are older, their mossy roofs and thick shutters whispering of generations past. The air feels cooler, and the leaves fall slower up here.";
         }
@@ -241,7 +241,7 @@ public class Amberfall : Region
         public Temple()
         {
             Name = "The Grove Chapel";
-            Tags = [RoomTags.religion, RoomTags.magic, RoomTags.quest];
+            //Tags = [RoomTags.religion, RoomTags.magic, RoomTags.quest];
             Description =
                 "Carved of honey-colored stone, the chapel is quiet and warm, lit by rows of floating candles. Forest offerings line the steps: bundles of herbs, carved acorns, feathers, and smooth river stones.";
             Entities =
@@ -269,7 +269,7 @@ public class Amberfall : Region
         public AmberholdManor()
         {
             Name = "Amberhold Manor";
-            Tags = [RoomTags.noble, RoomTags.historic, RoomTags.religion];
+            //Tags = [RoomTags.noble, RoomTags.historic, RoomTags.religion];
             Description =
                 "Once a summer retreat for the lesser line of a distant royal house, the manor is modest but elegant. Ivy climbs its pillars, and its windows glow with quiet candlelight—even when no one's home.";
             Entities =
@@ -301,7 +301,7 @@ public class Amberfall : Region
         Room? marketSquare = AddRoom(new Room
         {
             Name = "Market Square",
-            Tags = [RoomTags.shop, RoomTags.social, RoomTags.trade],
+            //Tags = [RoomTags.shop, RoomTags.social, RoomTags.trade],
             Description = "Stalls of rough wood and faded canvas cluster beneath the golden canopy of overhanging trees. Merchants call out their wares—spiced cider, polished stones, handwoven cloaks—while townsfolk barter under the drifting leaves.",
             Entities = [
                 new Mob.Mob{
@@ -332,7 +332,7 @@ public class Amberfall : Region
         var generalStore = new Room
         {
             Name = "The Hollow Log",
-            Tags = [RoomTags.shop, RoomTags.social, RoomTags.trade],
+            //Tags = [RoomTags.shop, RoomTags.social, RoomTags.trade],
             Description = "Tucked beneath the sweeping boughs of an old oak, The Hollow Log is a cozy general store built partly into the trunk of a fallen tree. Shelves carved from the wood itself hold everything from bundles of herbs to coiled rope and clay pots. The scent of beeswax and dried apples lingers in the air.",
             Entities = [
                 new Denizen
@@ -368,7 +368,7 @@ public class Amberfall : Region
         var tavern = new Room
         {
             Name = "Fox & Fellow",
-            Tags = [RoomTags.inn, RoomTags.social, RoomTags.rest],
+            //Tags = [RoomTags.inn, RoomTags.social, RoomTags.rest],
             Description = "Laughter and low music spill from the tavern’s crooked doorway, its sign bearing a fox and a gentleman in a tricorn hat. The hearth burns bright, and the scent of roast squash and strong cider welcomes you in.",
             Entities = [
                 new Denizen{
@@ -399,7 +399,7 @@ public class Amberfall : Region
         var alchemyShop = new Room
         {
             Name = "Moss & Mortar",
-            Tags = [RoomTags.alchemy, RoomTags.shop, RoomTags.social],
+            //Tags = [RoomTags.alchemy, RoomTags.shop, RoomTags.social],
             Description = "A crooked little shop stuffed with drying herbs, bottled moonlight, and forest oddities. The air buzzes faintly with magic, and a small bell jingles as you enter beneath a branch-bound sign.",
             Entities = [
                 new Denizen{
@@ -418,7 +418,7 @@ public class Amberfall : Region
         Room? lowerAmberfall = AddRoom(new Room
         {
             Name = "Southshade Lane",
-            Tags = [RoomTags.residential, RoomTags.farming, RoomTags.homes],
+            //Tags = [RoomTags.residential, RoomTags.farming, RoomTags.homes],
             Description = "The southern stretch of town is quieter—cobbled paths lined with orchard cottages, chicken coops, and low stone walls. Children play under apple trees while elders sip cider and gossip on worn benches.",
             Entities = [
                 new Denizen{
@@ -435,7 +435,7 @@ public class Amberfall : Region
         var barracks = new Room
         {
             Name = "The Watchman’s Lodge",
-            Tags = [RoomTags.millitary, RoomTags.training, RoomTags.quest],
+            //Tags = [RoomTags.millitary, RoomTags.training, RoomTags.quest],
             Description = "The barracks sit tucked between the orchard’s edge and the watch path. Training dummies lean against the fence, and you hear the clink of armor and barked drills within.",
             Entities = [
                 new Denizen{
@@ -457,7 +457,7 @@ public class Amberfall : Region
         var watchTower = new Room
         {
             Name = "The Timber Crown",
-            Tags = [RoomTags.millitary, RoomTags.exploration, RoomTags.high_ground],
+            //Tags = [RoomTags.millitary, RoomTags.exploration, RoomTags.high_ground],
             Description = "A tall wooden tower rises above the treetops, its frame dark with age but sturdy still. From here, one can see the Emberwood stretching endlessly east—and the winding roads that bring both trade and trouble.",
             Entities = [
                 new Denizen{
@@ -476,13 +476,13 @@ public class Amberfall : Region
         Room? upperAmberfall = AddRoom(new Room
         {
             Name = "Highbranch Row",
-            Tags = [RoomTags.residential, RoomTags.noble, RoomTags.historic],
+            //Tags = [RoomTags.residential, RoomTags.noble, RoomTags.historic],
             Description = "Perched on a low hill, the homes here are older, their mossy roofs and thick shutters whispering of generations past. The air feels cooler, and the leaves fall slower up here."
         });
         var temple = new Room
         {
             Name = "The Grove Chapel",
-            Tags = [RoomTags.religion, RoomTags.magic, RoomTags.quest],
+            //Tags = [RoomTags.religion, RoomTags.magic, RoomTags.quest],
             Description = "Carved of honey-colored stone, the chapel is quiet and warm, lit by rows of floating candles. Forest offerings line the steps: bundles of herbs, carved acorns, feathers, and smooth river stones.",
             Entities = [
                 new Denizen{
@@ -499,7 +499,7 @@ public class Amberfall : Region
         var royalQuarters = new Room
         {
             Name = "Amberhold Manor",
-            Tags = [RoomTags.noble, RoomTags.historic, RoomTags.religion],
+            //Tags = [RoomTags.noble, RoomTags.historic, RoomTags.religion],
             Description = "Once a summer retreat for the lesser line of a distant royal house, the manor is modest but elegant. Ivy climbs its pillars, and its windows glow with quiet candlelight—even when no one's home.",
             Entities = [
                 new Denizen{

@@ -2,8 +2,10 @@
 
 using GameServer.Core;
 using GameServer.Core.Database;
+using GameServer.Core.Scripting;
 using GameServer.Hubs;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 
 WebApplicationBuilder? builder = WebApplication.CreateBuilder(args);
 

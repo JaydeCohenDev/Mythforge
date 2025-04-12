@@ -1,8 +1,21 @@
-import { contextBridge } from 'electron'
+import { contextBridge, ipcRenderer } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
 
+
 // Custom APIs for renderer
-const api = {}
+const api = {
+  getScript: (script) => {
+    ipcRenderer.send("get_script", script);
+  }
+}
+
+// contextBridge.exposeInMainWorld("electronApi", {
+//   getOmniSharpProcess: () => {
+//     const omnisharpPath = path.join(__dirname, 'electron-resources', 'omnisharp', 'OmniSharp.exe');
+//     return spawn(omnisharpPath, ['-lsp']);
+//   }
+// })
+
 
 // Use `contextBridge` APIs to expose Electron APIs to
 // renderer only if context isolation is enabled, otherwise
@@ -11,6 +24,8 @@ if (process.contextIsolated) {
   try {
     contextBridge.exposeInMainWorld('electron', electronAPI)
     contextBridge.exposeInMainWorld('api', api)
+    
+    
   } catch (error) {
     console.error(error)
   }

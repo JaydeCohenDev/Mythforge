@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GameServer.Migrations
 {
     [DbContext(typeof(GameDbContext))]
-    [Migration("20250410050429_RoomExitsNotMapped4")]
-    partial class RoomExitsNotMapped4
+    [Migration("20250411030027_currentroom")]
+    partial class currentroom
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -20,11 +20,36 @@ namespace GameServer.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.4");
 
+            modelBuilder.Entity("GameServer.Core.Auth.Account", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Accounts");
+                });
+
             modelBuilder.Entity("GameServer.Core.Entity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
+
+                    b.Property<int?>("CurrentRoomId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -37,14 +62,17 @@ namespace GameServer.Migrations
                     b.Property<string>("PressenceText")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("RoomId")
-                        .HasColumnType("INTEGER");
+                    b.PrimitiveCollection<string>("Scripts")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("RoomId");
+                    b.HasIndex("CurrentRoomId");
 
                     b.ToTable("Entity");
+
+                    b.UseTptMappingStrategy();
                 });
 
             modelBuilder.Entity("GameServer.Core.Region", b =>
@@ -109,11 +137,29 @@ namespace GameServer.Migrations
                     b.ToTable("RoomLink");
                 });
 
+            modelBuilder.Entity("GameServer.Core.Player", b =>
+                {
+                    b.HasBaseType("GameServer.Core.Entity");
+
+                    b.Property<int>("AccountId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Gold")
+                        .HasColumnType("INTEGER");
+
+                    b.HasIndex("AccountId")
+                        .IsUnique();
+
+                    b.ToTable("Players", (string)null);
+                });
+
             modelBuilder.Entity("GameServer.Core.Entity", b =>
                 {
-                    b.HasOne("GameServer.Core.Room", null)
+                    b.HasOne("GameServer.Core.Room", "CurrentRoom")
                         .WithMany("Entities")
-                        .HasForeignKey("RoomId");
+                        .HasForeignKey("CurrentRoomId");
+
+                    b.Navigation("CurrentRoom");
                 });
 
             modelBuilder.Entity("GameServer.Core.Room", b =>
@@ -135,6 +181,29 @@ namespace GameServer.Migrations
                         .WithMany()
                         .HasForeignKey("RoomId")
                         .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("GameServer.Core.Player", b =>
+                {
+                    b.HasOne("GameServer.Core.Auth.Account", "Account")
+                        .WithOne("Player")
+                        .HasForeignKey("GameServer.Core.Player", "AccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GameServer.Core.Entity", null)
+                        .WithOne()
+                        .HasForeignKey("GameServer.Core.Player", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Account");
+                });
+
+            modelBuilder.Entity("GameServer.Core.Auth.Account", b =>
+                {
+                    b.Navigation("Player")
                         .IsRequired();
                 });
 

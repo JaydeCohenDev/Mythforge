@@ -5,14 +5,14 @@
 namespace GameServer.Migrations
 {
     /// <inheritdoc />
-    public partial class EntityScripts : Migration
+    public partial class accountpermissions : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<string>(
-                name: "Scripts",
-                table: "Entity",
+                name: "Permissions",
+                table: "Accounts",
                 type: "TEXT",
                 nullable: false,
                 defaultValue: "[]");
@@ -22,8 +22,8 @@ namespace GameServer.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "Scripts",
-                table: "Entity");
+                name: "Permissions",
+                table: "Accounts");
         }
     }
 }

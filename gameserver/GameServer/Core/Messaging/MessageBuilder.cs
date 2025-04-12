@@ -126,7 +126,7 @@ public class MessageBuilder
         return this;
     }
 
-    public MessageBuilder AddTagList<T>(List<T> tags) where T : Enum
+    public MessageBuilder AddTagList(List<string> tags)
     {
         _stringBuilder.Append("[ ");
         _stringBuilder.AppendJoin(", ", tags.Select(t => t));

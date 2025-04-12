@@ -43,6 +43,13 @@
             showMessage(message);
         });
 
+        con.on('GetScript', (script) => {
+            console.log('GETSCRIPT');
+            console.log(script);
+
+            window.api.getScript(script);
+        });
+
         con.on('ShowOptions', async (options) => {
             console.log(options);
             let prom = new Promise((resolve, _) => {
