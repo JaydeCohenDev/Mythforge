@@ -5,6 +5,8 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameServer", "GameServer\GameServer.csproj", "{55990283-5267-4172-B193-7FD7797DAA48}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptApi", "ScriptApi\ScriptApi.csproj", "{388573CC-C714-46DC-9981-5A5FE0C5205D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,6 +20,10 @@ Global
 		{55990283-5267-4172-B193-7FD7797DAA48}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{55990283-5267-4172-B193-7FD7797DAA48}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{55990283-5267-4172-B193-7FD7797DAA48}.Release|Any CPU.Build.0 = Release|Any CPU
+		{388573CC-C714-46DC-9981-5A5FE0C5205D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{388573CC-C714-46DC-9981-5A5FE0C5205D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{388573CC-C714-46DC-9981-5A5FE0C5205D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{388573CC-C714-46DC-9981-5A5FE0C5205D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{55990283-5267-4172-B193-7FD7797DAA48} = {93A958F4-626C-41FA-93F6-AC35E6003393}

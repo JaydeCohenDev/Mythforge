@@ -13,6 +13,7 @@ public class ScriptFile
     public ScriptInstance CreateInstance()
     {
         var instance = new ScriptInstance(this);
+        Instances.Add(instance);
         return instance;
     }
 }

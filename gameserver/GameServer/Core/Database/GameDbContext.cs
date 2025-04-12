@@ -35,6 +35,11 @@ public class GameDbContext : DbContext
         //modelBuilder.Entity<Room>().Navigation(r => r.Entities).AutoInclude();
         //modelBuilder.Entity<Room>().Navigation(r => r.Exits).AutoInclude();
         //modelBuilder.Entity<Room>().Navigation(r => r.Scripts).AutoInclude();
+
+        modelBuilder.Entity<Entity>()
+            .HasMany(e => e.Scripts)
+            .WithOne()
+            .OnDelete(DeleteBehavior.Cascade);
         
         modelBuilder.Entity<Account>()
             .HasOne(p => p.Player)

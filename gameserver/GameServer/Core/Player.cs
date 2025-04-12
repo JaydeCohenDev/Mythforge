@@ -1,4 +1,5 @@
 using System;
+using System.Text.Json.Serialization;
 using GameServer.Content;
 using GameServer.Content.Commands;
 using GameServer.Core.Ability;
@@ -12,6 +13,7 @@ namespace GameServer.Core;
 public class Player : Entity
 {
     public int AccountId { get; set; }
+    [JsonIgnore]
     public Account Account { get; set; } = null!;
     public Room LoginRoom { get; set; }
 
