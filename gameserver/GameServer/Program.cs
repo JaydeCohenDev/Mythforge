@@ -39,4 +39,10 @@ IHubContext<GameHub>? hub = app.Services.GetService<IHubContext<GameHub>>();
 Game.HubContext = hub!;
 Game.Init();
 
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<GameDbContext>();
+    await DbContextPreloader.PreloadDatabaseAsync(context, Console.WriteLine);
+}
+
 app.Run();

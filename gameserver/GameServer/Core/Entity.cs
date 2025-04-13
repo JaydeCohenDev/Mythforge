@@ -15,6 +15,7 @@ public class Entity
     [NotMapped]
     public List<EntityTrait> Traits { get; init; } = [];
 
+    [JsonIgnore]
     public List<ScriptInstance> Scripts { get; init; } = [];
    
     [JsonIgnore]
