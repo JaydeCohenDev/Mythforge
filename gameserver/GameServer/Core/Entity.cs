@@ -1,5 +1,3 @@
-
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 using GameServer.Core.Scripting;
 using ScriptApi;
@@ -12,9 +10,6 @@ public class Entity
     public virtual string Name { get; set; } = string.Empty;
     public string? PressenceText { get; set; }
     public string Description { get; set; } = string.Empty;
-    
-    [NotMapped]
-    public List<EntityTrait> Traits { get; init; } = [];
 
     [JsonIgnore]
     public virtual List<ScriptInstance> Scripts { get; init; } = [];
@@ -24,10 +19,6 @@ public class Entity
 
     public virtual void Tick()
     {
-        //Console.WriteLine($"{Name} Tick");
-        Traits.ForEach(t => t.Tick());
-
-        
         Scripts.ForEach(s =>
         {
             var script = (s.RuntimeScript as EntityScript);
@@ -58,18 +49,6 @@ public class Entity
     public virtual void OnEnterRoom(Room room)
     {
         CurrentRoom = room;
-    }
-
-    public Entity AddTraits(params EntityTrait[] traits)
-    {
-        Traits.AddRange(traits);
-        Traits.ForEach(t => t.Owner = this);
-        return this;
-    }
-
-    public T? GetTrait<T>() where T : EntityTrait
-    {
-        return Traits.FirstOrDefault(t => t is T) as T;
     }
 
     public virtual string ToPressenceString()
