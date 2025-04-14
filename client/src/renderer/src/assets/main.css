@@ -16,3 +16,7 @@ body {
 pre {
   line-height: 1px;
 }
+
+.user-input {
+  color: darkolivegreen;
+}

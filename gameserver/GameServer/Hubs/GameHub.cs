@@ -1,31 +1,13 @@
-
-using System.Text.Json;
 using GameServer.Core;
-using GameServer.Core.Auth;
 using GameServer.Core.Flows;
-using GameServer.Core.Messaging;
 using GameServer.Core.Scripting;
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.EntityFrameworkCore;
+using ScriptApi;
+using ScriptApi.Flow;
+using Player = GameServer.Core.Player;
+using ScriptFlowBuilder = GameServer.Core.Flows.ScriptFlowBuilder;
 
 namespace GameServer.Hubs;
-
-public class PlayerSession
-{
-    public string ConnectionId { get; set; }
-
-    public IFlow CurrentFlow { get; set; }
-
-    public Dictionary<string, object> TempData { get; set; } = new();
-
-    public string Name { get; set; }
-    public Account Account { get; set; }
-    public Player Player { get; set; }
-
-    public bool IsLoggedIn => Account != null;
-
-    public string CurrentRoomId { get; set; }
-}
 
 public class GameHub : Hub
 {
@@ -44,7 +26,14 @@ public class GameHub : Hub
         };
         Sessions[Context.ConnectionId] = session;
 
-        await _flowManager.StartFlow(session, Clients.Caller, LoginFlow.Build());
+        var gameManager = ScriptManager.Get<GameManagerBase>();
+        ScriptFlow? initFlow = gameManager?.GetInitialFlow();
+        if (initFlow != null)
+        {
+            var builder = new ScriptFlowBuilder();
+            initFlow.Build(builder);
+            await _flowManager.StartFlow(session, Clients.Caller, builder.Build());    
+        }
     }
     
     public override async Task OnDisconnectedAsync(Exception? exception)
@@ -66,47 +55,5 @@ public class GameHub : Hub
         }
 
         await _flowManager.HandleInput(session, Clients.Caller, userInput);
-    }
-
-    public Task<string> GetRegion(string regionId)
-    {
-        Console.WriteLine($"Getting region data for {regionId}");
-
-        if (Region.All.TryGetValue(regionId, out Region? region))
-        {
-            Console.WriteLine($"Found region! {region.Name}. Sending to client.");
-            return Task.FromResult(JsonSerializer.Serialize(new
-            {
-                success = true,
-                data = region
-            }));
-        }
-
-        return Task.FromResult(JsonSerializer.Serialize(new
-        {
-            success = false,
-            error = $"Could not find region with id {regionId}"
-        }));
-    }
-
-    public Task<string> GetRoom(string roomId)
-    {
-        Console.WriteLine($"Getting room data for {roomId}");
-
-        if (Room.All.TryGetValue(roomId, out Room? room))
-        {
-            Console.WriteLine($"Found room! {room.Name}. Sending to client.");
-            return Task.FromResult(JsonSerializer.Serialize(new
-            {
-                success = true,
-                data = room
-            }));
-        }
-
-        return Task.FromResult(JsonSerializer.Serialize(new
-        {
-            success = false,
-            error = $"Could not find region with id {roomId}"
-        }));
     }
 }

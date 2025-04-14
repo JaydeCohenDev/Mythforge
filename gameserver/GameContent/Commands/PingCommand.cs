@@ -7,9 +7,9 @@ public class PingCommand : ICommand
     public string[] GetAliases()
         => ["ping"];
 
-    public Task Execute(Entity player, string[] args)
+    public Task Execute(Player player, string[] args)
     {
-        player.Tell("Pong!!!!!");
+        player.Tell(new Message("Pong!!!!!"));
         return Task.CompletedTask;
     }
 }

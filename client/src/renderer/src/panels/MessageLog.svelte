@@ -104,9 +104,11 @@
 
         var con = await connect();
 
+        showMessage(`<span class='user-input'>> ${userInput}</span>`);
         await con.invoke('SendInput', userInput);
         history.push(userInput);
         historyIndex = 0;
+
         userInput = '';
     };
 

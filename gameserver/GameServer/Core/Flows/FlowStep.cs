@@ -1,8 +1,4 @@
-﻿using GameServer.Hubs;
-using Microsoft.AspNetCore.SignalR;
-
-namespace GameServer.Core.Flows;
-
+﻿using GameServer.Core.Flows;
 
 public class FlowStep
 {

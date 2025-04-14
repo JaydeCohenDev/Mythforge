@@ -1,7 +1,6 @@
 
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
-using GameServer.Core.Database;
 using GameServer.Core.Scripting;
 using ScriptApi;
 
@@ -27,29 +26,25 @@ public class Entity
     {
         //Console.WriteLine($"{Name} Tick");
         Traits.ForEach(t => t.Tick());
-        if (Name == "box")
-        {
-            Console.WriteLine($"{Name} Tick");
-        }
 
         
         Scripts.ForEach(s =>
         {
             var script = (s.RuntimeScript as EntityScript);
-            if (script != null)
-            {
-                if (script.Entity == null)
-                {
-                    script.Entity = new ScriptApi.Entity(new EntityBridge())
-                    {
-                        Name = Name,
-                        Description = Description,
-                        Id = Id,
-                        PresenceText = ToPressenceString()
-                    };
-                }
-                script.OnUpdate();
-            }
+            // if (script != null)
+            // {
+            //     if (script.Entity == null)
+            //     {
+            //         script.Entity = new ScriptApi.Entity(new EntityProxy())
+            //         {
+            //             Name = Name,
+            //             Description = Description,
+            //             Id = Id,
+            //             PresenceText = ToPressenceString()
+            //         };
+            //     }
+            //     script.OnUpdate();
+            // }
         });
     }
 

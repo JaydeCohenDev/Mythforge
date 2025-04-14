@@ -2,7 +2,6 @@
 
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using GameServer.Core.Messaging;
 using GameServer.Core.Scripting;
 using Microsoft.AspNetCore.SignalR;
 
@@ -39,7 +38,6 @@ public class Room
 
     public void Tick()
     {
-        //Console.WriteLine($"{Name} Tick");
         Entities.ForEach(e => e.Tick());
     }
 
@@ -60,7 +58,7 @@ public class Room
 
     public override string ToString()
     {
-        return $"<room payload='{Payload.Encode(this)}'>{Name}</room>";
+        return Name;
     }
 }
 

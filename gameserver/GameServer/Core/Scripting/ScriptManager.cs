@@ -68,44 +68,57 @@ public static class ScriptManager
     }
     
     private static void OnDllChanged(object sender, FileSystemEventArgs e)
+    {
+        lock (LockObject)
         {
-            lock (LockObject)
+            try
             {
-                try
-                {
-                    Console.WriteLine($"Detected DLL change: {e.FullPath}");
+                Console.WriteLine($"Detected DLL change: {e.FullPath}");
 
-                    // Load or reload the assembly
-                    string dllPath = e.FullPath;
-                    var assemblyName = Path.GetFileNameWithoutExtension(dllPath);
+                // Load or reload the assembly
+                string dllPath = e.FullPath;
+                var assemblyName = Path.GetFileNameWithoutExtension(dllPath);
 
-                    // Check if already loaded, replace if needed
-                    if (LoadedAssemblies.ContainsKey(assemblyName))
-                    {
-                        LoadedAssemblies[assemblyName] = ReloadAssembly(dllPath);
-                        Console.WriteLine($"Reloaded assembly: {assemblyName}");
-                    }
-                    else
-                    {
-                        var assembly = LoadAssembly(dllPath);
-                        if (assembly != null)
-                        {
-                            LoadedAssemblies[assemblyName] = assembly;
-                            Console.WriteLine($"Loaded new assembly: {assemblyName}");
-                        }
-                    }
-                    
-                    World.Db.ScriptInstances.ForEachAsync(s =>
-                    {
-                        s.ReloadRuntimeScript();
-                    });
-                }
-                catch (Exception ex)
+                // Check if already loaded, replace if needed
+                if (LoadedAssemblies.ContainsKey(assemblyName))
                 {
-                    Console.WriteLine($"Error handling DLL change: {ex.Message}");
+                    LoadedAssemblies[assemblyName] = ReloadAssembly(dllPath);
+                    Console.WriteLine($"Reloaded assembly: {assemblyName}");
                 }
+                else
+                {
+                    var assembly = LoadAssembly(dllPath);
+                    if (assembly != null)
+                    {
+                        LoadedAssemblies[assemblyName] = assembly;
+                        Console.WriteLine($"Loaded new assembly: {assemblyName}");
+                    }
+                }
+                
+                PostScriptPackageLoad(LoadedAssemblies[assemblyName]);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error handling DLL change: {ex.Message}");
             }
         }
+    }
+
+    private static void PostScriptPackageLoad(LoadedScriptAssembly? scriptPackage)
+    {
+        World.Db.ScriptInstances.ForEachAsync(s =>
+        {
+            s.ReloadRuntimeScript();
+        });
+
+        if (scriptPackage == null) return;
+        scriptPackage.Assembly.GetTypes().Where(t => t.IsAssignableTo(typeof(ScriptApi.ICommand)) && !t.IsAbstract)
+            .ToList().ForEach(t =>
+            {
+                if (Activator.CreateInstance(t) is ScriptApi.ICommand command) 
+                    CommandHandler.RegisterCommand(command);
+            });
+    }
 
         private static void OnDllDeleted(object sender, FileSystemEventArgs e)
         {
@@ -119,10 +132,7 @@ public static class ScriptManager
                     Console.WriteLine($"Unloaded assembly: {assemblyName}");
                 }
                 
-                World.Db.ScriptInstances.ForEachAsync(s =>
-                {
-                    s.ReloadRuntimeScript();
-                });
+                PostScriptPackageLoad(null);
             }
         }
 
@@ -166,7 +176,8 @@ public static class ScriptManager
             if (LoadedAssemblies.TryGetValue(assemblyName, out var oldAssembly))
             {
                 Console.WriteLine($"Unloading old assembly: {assemblyName}");
-
+                
+                CommandHandler.Commands.Clear();
                 LoadedAssemblies.TryRemove(assemblyName, out _);
                 oldAssembly.LoadContext.Unload();
 
@@ -197,14 +208,12 @@ public static class ScriptManager
                     if (assembly != null)
                     {
                         LoadedAssemblies[assemblyName] = assembly;
+                        PostScriptPackageLoad(assembly);
                     }
                 }
             }
             
-            World.Db.ScriptInstances.ForEachAsync(s =>
-            {
-                s.ReloadRuntimeScript();
-            });
+            
         }
         catch (Exception ex)
         {
@@ -215,5 +224,36 @@ public static class ScriptManager
     public static void Init()
     {
         // Triger load
+    }
+
+    public static T? Get<T>() where T : class
+    {
+        lock (LockObject)
+        {
+            foreach (LoadedScriptAssembly assembly in LoadedAssemblies.Values)
+            {
+                Console.WriteLine($"Looking for script type: {typeof(T).FullName}");
+                
+                try
+                {
+                    // Find the script type with the specified name
+
+                    
+                    var types = assembly.Assembly.GetTypes().ToList();
+                        foreach (var t in types)
+                        {
+                          if(t.IsAssignableTo(typeof(T)) && !t.IsAbstract)
+                              return Activator.CreateInstance(t) as T;
+                        };
+                }
+                catch (ReflectionTypeLoadException ex)
+                {
+                    // Handle issues with loading types from assembly (e.g., missing dependencies)
+                    Console.WriteLine($"Error loading types from assembly: {ex.Message}");
+                }
+            }
+        }
+
+        return null;
     }
 }

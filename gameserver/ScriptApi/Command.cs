@@ -8,5 +8,8 @@ public interface ICommandBridge
 public interface ICommand
 {
     public string[] GetAliases();
-    public Task Execute(Entity player, string[] args);
+
+    public virtual bool CanExecute(Player player, string[] args) => true;
+    
+    public Task Execute(Player player, string[] args);
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using GameServer.Core.Scripting;
+using Microsoft.AspNetCore.SignalR;
 
 namespace GameServer.Core.Flows;
 
@@ -12,13 +13,14 @@ public static class MainGameFlow
                 string commandName = input.Split(" ").First();
                 string[] args = input.Split(" ").Skip(1).ToArray();
 
-                ICommand? command = Game.FindCommand(commandName);
+                var playerProxy = new PlayerProxy(session.Player);
+                CommandHandler.Commands.TryGetValue(commandName, out ScriptApi.ICommand? command);
                 if (command is not null)
                 {
-                    if (!command.CanExecute(session.Player, args))
+                    if (!command.CanExecute(playerProxy, args))
                         await session.Player.SendAsync("You lack the required permissions to execute this command.");
                     else
-                        await command.Execute(session.Player, args);
+                        await command.Execute(playerProxy, args);
                     return;
                 }
 

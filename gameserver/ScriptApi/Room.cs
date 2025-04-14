@@ -1,18 +1,11 @@
 ﻿namespace ScriptApi;
-
-public interface IRoomBridge
+public abstract class Room
 {
-    public Room GetRoom(int id);
-    public void TellRoom(int id, string message);
-    public Entity[] GetEntities(int id);
-}
+    public virtual int Id { get; init; }
+    public virtual string Name { get; init; } = string.Empty;
+    public virtual string Description { get; init; } = string.Empty;
 
-public class Room(IRoomBridge bridge)
-{
-    public int Id { get; init; }
-    public string Name { get; init; } = string.Empty;
-    public string Description { get; init; } = string.Empty;
-
-    public Entity[] GetEntities() => bridge.GetEntities(Id);
-    public void Tell(string message) => bridge.TellRoom(Id, message);
+    public abstract List<Entity> GetEntities();
+    public abstract List<Room> GetExits();
+    public abstract void Tell(Message message);
 }

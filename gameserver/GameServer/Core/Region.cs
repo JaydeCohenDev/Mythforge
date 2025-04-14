@@ -23,7 +23,6 @@ public class Region
 
     public void Tick()
     {
-        Console.WriteLine($"{Name} Tick");
         Rooms.ForEach(r => r.Tick());
     }
 

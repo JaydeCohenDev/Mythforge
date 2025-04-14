@@ -1,19 +1,13 @@
 ﻿namespace ScriptApi;
 
-public interface IEntityBridge
+public abstract class Entity
 {
-    public Entity? GetEntity(Guid id);
-    public Room? GetEntityRoom(Guid id);
-    public void TellEntity(Guid id, string message);
-}
+    public virtual Guid Id { get; init; }
+    public virtual string Name { get; init; }
+    public virtual string Description { get; init; }
+    public virtual string PresenceText { get; init; }
 
-public class Entity(IEntityBridge bridge)
-{
-    public Guid Id { get; init; }
-    public string Name { get; init; } = string.Empty;
-    public string Description { get; init; } = string.Empty;
-    public string PresenceText { get; init; } = string.Empty;
-
-    public Room? GetRoom() => bridge.GetEntityRoom(Id);
-    public void Tell(string message) => bridge.TellEntity(Id, message);
+    public abstract Room? GetRoom();
+    public abstract void Tell(Message message);
+    public abstract void MoveTo(Room room);
 }
