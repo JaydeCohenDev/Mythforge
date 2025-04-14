@@ -1,6 +1,6 @@
 ﻿namespace ScriptApi;
 
-public abstract class CommandScript
+public abstract class CommandScript : ScriptBase
 {
     
 }

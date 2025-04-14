@@ -1,6 +1,6 @@
 ﻿namespace ScriptApi;
 
-public abstract class ItemScript
+public abstract class ItemScript : ScriptBase
 {
     
 }

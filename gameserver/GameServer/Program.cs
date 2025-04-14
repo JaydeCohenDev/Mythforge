@@ -6,6 +6,7 @@ using GameServer.Core.Scripting;
 using GameServer.Hubs;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using ScriptApi;
 
 WebApplicationBuilder? builder = WebApplication.CreateBuilder(args);
 
@@ -36,13 +37,12 @@ app.MapHub<GameHub>("/game");
 IHubContext<GameHub>? hub = app.Services.GetService<IHubContext<GameHub>>();
 
 
+
+ScriptManager.Init();
+
+
+
 Game.HubContext = hub!;
 Game.Init();
-
-using (var scope = app.Services.CreateScope())
-{
-    var context = scope.ServiceProvider.GetRequiredService<GameDbContext>();
-    await DbContextPreloader.PreloadDatabaseAsync(context, Console.WriteLine);
-}
 
 app.Run();

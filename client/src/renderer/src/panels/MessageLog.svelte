@@ -22,60 +22,63 @@
     };
 
     const initializeConnection = async () => {
-        const con = await connect();
-
-        const resizeObserver = new ResizeObserver(() => {
-            messagesEl.parentElement.scrollTo(0, messagesEl.parentElement.scrollHeight);
-        });
-
-        resizeObserver.observe(messagesEl);
-
-        con.onclose(() => {
-            showMessage('Disconnected from server.');
-        });
-
-        con.onreconnecting(() => {
-            showMessage('Reconnecting to server...');
-        });
-
-        con.onreconnected(() => {
-            showMessage('Reconnected.');
-        });
-
-        con.on('ShowMessage', (message) => {
-            showMessage(message);
-        });
-
-        con.on('GetScript', (script) => {
-            console.log('GETSCRIPT');
-            console.log(script);
-
-            window.api.getScript(script);
-        });
-
-        con.on('ShowOptions', async (options) => {
-            console.log(options);
-            let prom = new Promise((resolve, _) => {
-                console.log('WORKD!');
-                const callback = (selection) => {
-                    console.log(selection);
-                    resolve(selection);
-                };
-
-                mount(OptionsSelection, {
-                    target: messagesEl,
-                    props: {
-                        options,
-                        callback
-                    }
+        connect()
+            .then((con) => {
+                const resizeObserver = new ResizeObserver(() => {
+                    messagesEl.parentElement.scrollTo(0, messagesEl.parentElement.scrollHeight);
                 });
-            });
 
-            return prom;
-        });
+                resizeObserver.observe(messagesEl);
+
+                con.onclose(() => {
+                    showMessage('Disconnected from server.');
+                });
+
+                con.onreconnecting(() => {
+                    showMessage('Reconnecting to server...');
+                });
+
+                con.onreconnected(() => {
+                    showMessage('Reconnected.');
+                });
+
+                con.on('ShowMessage', (message) => {
+                    showMessage(message);
+                });
+
+                con.on('ShowOptions', async (options) => {
+                    console.log(options);
+                    let prom = new Promise((resolve, _) => {
+                        console.log('WORKD!');
+                        const callback = (selection) => {
+                            console.log(selection);
+                            resolve(selection);
+                        };
+
+                        mount(OptionsSelection, {
+                            target: messagesEl,
+                            props: {
+                                options,
+                                callback
+                            }
+                        });
+                    });
+
+                    return prom;
+                });
+            })
+            .catch((err) => {
+                showMessage('Unable to connect to server. Retrying in 5s');
+                console.log('connection failed, retrying', err);
+                setTimeout(() => {
+                    initializeConnection();
+                }, 5000);
+            });
     };
 
     const keyEvent = (e) => {
+        focusInput();
+
         if (e.key === 'ArrowUp') {
             userInput = history[history.length - historyIndex - 1];
             historyIndex++;
@@ -115,7 +118,7 @@
 
 <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 <!-- svelte-ignore a11y_no_static_element_interactions -->
-<div class="panel" onclick={focusInput} onkeypress={focusInput}>
+<div class="panel">
     <div class="message-log">
         <div class="messages" bind:this={messagesEl}></div>
     </div>
@@ -134,6 +137,7 @@
     .message-log {
         flex-grow: 1;
         overflow-y: scroll;
+        overflow-x: hidden;
         scrollbar-color: #222 #111;
         scroll-behavior: smooth;
         color: white;

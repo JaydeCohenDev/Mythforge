@@ -5,7 +5,6 @@ body {
   background-color: #111;
 
   overflow: hidden;
-  cursor: none;
 }
 
 * {
@@ -13,9 +12,6 @@ body {
 
 }
 
-input {
-  cursor: none;
-}
 
 pre {
   line-height: 1px;

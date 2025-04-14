@@ -1,8 +1,11 @@
-﻿namespace ScriptApi;
+﻿using System.Text.Json.Serialization;
 
-public abstract class EntityScript
+namespace ScriptApi;
+
+public abstract class EntityScript : ScriptBase
 {
-    public required Entity Entity { get; init; }
+    [JsonIgnore]
+    public required Entity Entity { get; set; }
     
     public virtual void OnSpawn() {}
     public virtual void OnGreet(Entity greeter) {}

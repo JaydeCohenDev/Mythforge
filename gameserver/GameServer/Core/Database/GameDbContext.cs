@@ -10,11 +10,16 @@ public class GameDbContext : DbContext
 {
     public DbSet<Account> Accounts { get; set; }
     public DbSet<Region> Regions { get; set; }
-    public DbSet<ScriptFile> Scripts { get; set; }
+    public DbSet<Room> Rooms { get; set; }
+    public DbSet<Player> Players { get; set; }
+    public DbSet<Entity> Entities { get; set; }
+    public DbSet<ScriptInstance> ScriptInstances { get; set; }
+    
     
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseSqlite("Data Source=game.db");
+        optionsBuilder.UseLazyLoadingProxies();
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

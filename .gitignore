@@ -7,3 +7,5 @@ gameserver/GameServer/game.db-shm
 gameserver/GameServer/game.db-wal
 /gameserver/ScriptApi/obj
 /gameserver/ScriptApi/bin
+/gameserver/GameContent/obj
+/gameserver/GameContent/bin

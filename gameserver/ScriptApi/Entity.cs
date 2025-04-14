@@ -14,6 +14,6 @@ public class Entity(IEntityBridge bridge)
     public string Description { get; init; } = string.Empty;
     public string PresenceText { get; init; } = string.Empty;
 
-    public Room GetRoom() => bridge.GetEntityRoom(Id);
+    public Room? GetRoom() => bridge.GetEntityRoom(Id);
     public void Tell(string message) => bridge.TellEntity(Id, message);
 }

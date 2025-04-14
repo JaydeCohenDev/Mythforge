@@ -17,10 +17,15 @@ public class RoomBridge : IRoomBridge
 
     public void TellRoom(int id, string message)
     {
+        Console.WriteLine($"Sending message to room {id}: {message}");
         var r = World.Db.Find<Room>(id);
-        r?.Entities.OfType<Player>().ToList().ForEach(p =>
+        r?.Entities.ToList().ForEach(p =>
         {
-            p.SendAsync(message);
+            if (p is Player player)
+            {
+                player.SendAsync(message);
+                
+            }
         });
     }
 

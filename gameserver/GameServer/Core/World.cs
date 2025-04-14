@@ -27,6 +27,7 @@ public class World
 
     public void Tick()
     {
-        //Db.Regions.ForEachAsync(r => r.Tick()).Wait();
+        Console.WriteLine("World Tick");
+        Db.Regions.Include(r => r.Rooms).ThenInclude(r => r.Entities).ThenInclude(r => r.Scripts).ForEachAsync(r => r.Tick());
     }
 }

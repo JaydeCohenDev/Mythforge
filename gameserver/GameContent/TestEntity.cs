@@ -1,4 +1,6 @@
-﻿namespace ScriptApi.TestScripts;
+﻿using ScriptApi;
+
+namespace GameContent;
 
 public class TestEntity : EntityScript
 {

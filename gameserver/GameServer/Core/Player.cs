@@ -14,8 +14,8 @@ public class Player : Entity
 {
     public int AccountId { get; set; }
     [JsonIgnore]
-    public Account Account { get; set; } = null!;
-    public Room LoginRoom { get; set; }
+    public virtual Account Account { get; set; } = null!;
+    public virtual Room LoginRoom { get; set; }
 
     public int Gold { get; set; } = 100;
 
@@ -53,5 +53,13 @@ public class Player : Entity
     }
 
     public Task SendAsync(params object[] args)
-        => Game.HubContext.Clients.Client(GetConnectionId()).SendAsync("ShowMessage", args);
+    {
+        string? conId = GetConnectionId();
+        if (conId != null)
+        {
+            return Game.HubContext.Clients.Client(conId).SendAsync("ShowMessage", args);
+        }
+        
+        return Task.CompletedTask;
+    }
 }

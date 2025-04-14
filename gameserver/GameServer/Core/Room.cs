@@ -18,12 +18,12 @@ public class Room
     public string Description { get; set; } = string.Empty;
     
     public List<string> Tags { get; set; } = [];
-    public List<Entity> Entities { get; init; } = [];
+    public virtual List<Entity> Entities { get; init; } = [];
 
    [JsonConverter(typeof(RoomListJsonConverter))]
-    public List<Room> Exits { get; } = [];
+    public virtual List<Room> Exits { get; } = [];
     
-    public List<ScriptInstance> Scripts { get; init; } = [];
+    public virtual List<ScriptInstance> Scripts { get; init; } = [];
 
     public Room()
     {
@@ -39,6 +39,7 @@ public class Room
 
     public void Tick()
     {
+        //Console.WriteLine($"{Name} Tick");
         Entities.ForEach(e => e.Tick());
     }
 

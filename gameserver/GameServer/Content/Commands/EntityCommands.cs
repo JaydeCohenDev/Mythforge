@@ -1,6 +1,9 @@
 ﻿using GameServer.Core;
 using GameServer.Core.Messaging;
-using Microsoft.EntityFrameworkCore;
+using GameServer.Core.Scripting;
+using ScriptApi;
+using Entity = GameServer.Core.Entity;
+using ICommand = GameServer.Core.ICommand;
 
 namespace GameServer.Content.Commands;
 
@@ -91,10 +94,11 @@ public class EntityAttachScriptCommand : ICommand
         }
 
         var scriptName = args[0];
-        
-        var scriptFile = await World.Db.Scripts.FirstOrDefaultAsync(s => s.Name == scriptName);
 
-        if (scriptFile is null)
+        var script = ScriptManager.CreateScript<EntityScript>(scriptName);
+        
+
+        if (script is null)
         {
             await player.SendAsync("That script doesn't exist.");
             return;
@@ -111,8 +115,15 @@ public class EntityAttachScriptCommand : ICommand
             await player.SendAsync("You don't see anything like that");
             return;
         }
-        
-        entity.Scripts.Add(scriptFile.CreateInstance());
+
+        var instance = new ScriptInstance
+        {
+            RuntimeScript = script,
+            ScriptClassName = scriptName
+        };
+        instance.ScriptClassName = scriptName;
+        instance.RuntimeScript = script;
+        entity.Scripts.Add(instance);
         
         await World.Db.SaveChangesAsync();
         await player.SendAsync($"{entityName} now has {scriptName} attached.");
@@ -160,8 +171,7 @@ public class EntityListScriptsCommand : ICommand
         
         entity.Scripts.ForEach(async s =>
         {
-            await World.Db.Entry(s).Reference(s => s.ScriptFile).LoadAsync();
-            message.AddText($"> {s.ScriptFile.Name}").AddBreak();
+            message.AddText($"> {s.ScriptClassName}").AddBreak();
         });
         
         await player.SendAsync(message.Build());

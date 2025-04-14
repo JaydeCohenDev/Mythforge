@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\ScriptApi\ScriptApi.csproj" />
+    </ItemGroup>
+
+    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+        <Copy SourceFiles="..\GameContent\bin\$(Configuration)\net8.0\GameContent.dll"
+              DestinationFiles="..\GameServer\bin\$(Configuration)\net8.0\Scripts\GameContent.dll" />
+    </Target>
+
+</Project>

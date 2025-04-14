@@ -14,4 +14,5 @@ public class Room(IRoomBridge bridge)
     public string Description { get; init; } = string.Empty;
 
     public Entity[] GetEntities() => bridge.GetEntities(Id);
+    public void Tell(string message) => bridge.TellRoom(Id, message);
 }

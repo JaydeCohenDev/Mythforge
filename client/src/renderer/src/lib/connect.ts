@@ -21,10 +21,18 @@ export async function connect(): Promise<SignalR.HubConnection>
         return curPromise;
     
     curPromise = new Promise<SignalR.HubConnection>((resolve, reject) => {
+        
+        // const timeout = setTimeout(() => {
+        //     reject(new Error("Connection timed out"));
+        // }, 2000);
+
+        
         connection.start().then(() => {
+           // clearTimeout(timeout);
             console.log("Connected!");
             return resolve(connection);
         }).catch(err => {
+            //clearTimeout(timeout);
             console.error(err);
             return reject(err);
         })
