@@ -1,5 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.Loader;
 using Microsoft.EntityFrameworkCore;
 using ScriptApi;
@@ -151,7 +152,18 @@ public static class ScriptManager
                 var assembly = context.LoadFromStream(stream);
                 
                 Console.WriteLine($"Assembly loaded: {assembly.FullName}");
-                assembly.GetTypes().ToList().ForEach(t => Console.WriteLine($"  - {t.FullName}"));
+                Console.WriteLine("Contained Types: ");
+                var filteredTypes = assembly.GetTypes()
+                    .Where(
+                        t => !t.IsDefined(typeof(CompilerGeneratedAttribute), inherit: true) &&
+                             !t.Name.StartsWith("<")
+                    ) // Exclude compiler-generated types
+                    .ToList();
+
+                filteredTypes.ForEach(t =>
+                {
+                    Console.WriteLine($"  - {t.FullName}");
+                });
                 
                 
                 

@@ -55,7 +55,7 @@ app.whenReady().then(() => {
   // IPC test
   ipcMain.on('ping', () => console.log('pong'))
   
-  ipcMain.on('get_script', (ev, scriptData) => {
+  ipcMain.on('get_script', (_, scriptData) => {
     var script = JSON.parse(scriptData);
     console.log(script);
     UpdateLocalScript(script);

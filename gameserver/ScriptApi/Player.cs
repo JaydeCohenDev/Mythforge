@@ -2,5 +2,5 @@
 
 public abstract class Player : Entity
 {
-    
+    public abstract Task Disconnect();
 }

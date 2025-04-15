@@ -10,4 +10,5 @@ public abstract class Entity
     public abstract Room? GetRoom();
     public abstract void Tell(Message message);
     public abstract void MoveTo(Room room);
+    public abstract T AttachScript<T>() where T : EntityScript;
 }

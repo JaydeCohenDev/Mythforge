@@ -1,4 +1,7 @@
-﻿using ScriptApi;
+﻿using GameContent.Classes;
+using GameContent.Races;
+using GameContent.Scripts;
+using ScriptApi;
 using ScriptApi.Flow;
 
 namespace GameContent.Flows;
@@ -7,77 +10,190 @@ public class CharacterCreationFlow : ScriptFlow
 {
     public override void Build(ScriptFlowBuilder builder)
     {
+        builder.AddStep(
+            new Message("That character is not known in these lands, are you new? [y/n]"),
+            async (api, input) =>
+            {
+                if (input != "y")
+                {
+                    await api.TellUser(new Message("Then tell me again..."));
+                    api.RestartCurrentFlow();
+                }
+            });
+        builder.AddStep(
+            new Message("Select a Race ")
+                .Append("[human/elf/dwarf/halfling]  INFO [RACE] for details", new TextColor("gray")),
+            async (api, input) =>
+            {
+                var args = input.Split(' ');
+                switch (args[0])
+                {
+                    case "human":
+                        api.StoreTemp("race", Race.Human);
+                        break;
+                    case "elf":
+                        api.StoreTemp("race", Race.Elf);
+                        break;
+                    case "dwarf":
+                        api.StoreTemp("race", Race.Dwarf);
+                        break;
+                    case "halfling":
+                        api.StoreTemp("race", Race.Halfling);
+                        break;
+                    case "info":
+
+                        if (args.Length < 2)
+                        {
+                            await api.TellUser(new Message("Please specify a race to view details for."));
+                            api.RestartStep();
+                            return;
+                        }
+                        
+                        string raceName = args[1];
+                        Race? race = raceName switch
+                        {
+                            "human" => Race.Human,
+                            "elf" => Race.Elf,
+                            "dwarf" => Race.Dwarf,
+                            "halfling" => Race.Halfling,
+                            _ => null
+                        };
+
+                        if (race == null)
+                        {
+                            await api.TellUser(new Message("That race is not known."));
+                            api.RestartStep();
+                            return;
+                        }
+                        
+                        await api.TellUser(new Message()
+                            .AppendLine(race.Name, new TextUnderline())
+                            .AppendLine(race.GetDescription().Build()));
+                        api.RestartStep();
+                        break;
+                    default:
+                        await api.TellUser(new Message("Please select a race."));
+                        api.RestartStep();
+                        break;
+                }
+            }
+        );
         
+        builder.AddStep(
+            new Message("Select a Class ")
+                .Append("[cleric/fighter/magicuser/theif]  INFO [CLASS] for details", new TextColor("gray")),
+            async (api, input) =>
+            {
+                var args = input.Split(' ');
+                switch (args[0])
+                {
+                    case "cleric":
+                        api.StoreTemp("class", Class.Cleric);
+                        break;
+                    case "fighter":
+                        api.StoreTemp("class", Class.Fighter);
+                        break;
+                    case "magicuser":
+                        api.StoreTemp("class", Class.MagicUser);
+                        break;
+                    case "theif":
+                        api.StoreTemp("class", Class.Thief);
+                        break;
+                    case "info":
+
+                        if (args.Length < 2)
+                        {
+                            await api.TellUser(new Message("Please specify a class to view details for."));
+                            api.RestartStep();
+                            return;
+                        }
+                        
+                        string className = args[1];
+                        Class? selectedClass = className switch
+                        {
+                            "cleric" => Class.Cleric,
+                            "fighter" => Class.Fighter,
+                            "magicuser" => Class.MagicUser,
+                            "theif" => Class.Thief,
+                            _ => null
+                        };
+
+                        if (selectedClass == null)
+                        {
+                            await api.TellUser(new Message("That class is not known."));
+                            api.RestartStep();
+                            return;
+                        }
+                        
+                        await api.TellUser(new Message()
+                            .AppendLine(selectedClass.Name, new TextUnderline())
+                            .AppendLine(selectedClass.GetDescription().Build()));
+                        api.RestartStep();
+                        break;
+                    default:
+                        await api.TellUser(new Message("Please select a class."));
+                        api.RestartStep();
+                        break;
+                }
+            }
+        );
         
-        // return new FlowBuilder()
-        //     .Step("That character is not known in these lands, are you new? [y/n]", 
-        //         async (context, session, caller, input) =>
-        //         {
-        //             if (input != "y")
-        //             {
-        //                 await caller.SendAsync("ShowMessage", "Then tell me again.");
-        //                 context.EndFlow();
-        //                 session.TempData.Remove("stepIndex");
-        //                 session.CurrentFlow = LoginFlow.Build();
-        //                 await session.CurrentFlow.Start(session, caller);
-        //             }
-        //         })
-        //     .Step("Reveal the cipher that guards your soul. <span style='color: gray'>[enter password]</span>", 
-        //         (context, session, caller, input) =>
-        //         {
-        //             session.TempData["password"] = input;
-        //             return Task.CompletedTask;
-        //         })
-        //     .Step("Confirm your cipher to seal the pact. <span style='color: gray'>[confirm password]</span>", 
-        //         async (context, session, caller, input) =>
-        //         {
-        //             if (input != (string)session.TempData["password"])
-        //             {
-        //                 await caller.SendAsync("ShowMessage", "You have failed to seal the pact.");
-        //                 session.TempData.Remove("password");
-        //
-        //                 await Task.Delay(1000);
-        //
-        //                 context.EndFlow();
-        //                 session.CurrentFlow = LoginFlow.Build(); 
-        //                 await session.CurrentFlow.Start(session, caller);
-        //             }
-        //         })
-        //     .End(async (session, caller) =>
-        //     {
-        //         var name = session.TempData["name"].ToString();
-        //         var password = session.TempData["password"].ToString();
-        //
-        //         Console.WriteLine($"Creating new account for {name}");
-        //         var account = new Account { Name = name, Password = password };
-        //         World.Db.Accounts.Add(account);
-        //
-        //         session.Account = account;
-        //         
-        //         session.TempData.Remove("name");
-        //         session.TempData.Remove("password");
-        //         
-        //         await caller.SendAsync("ShowMessage", $"Your pact is sealed, {name}!");
-        //
-        //         Console.WriteLine($"Creating new player entity for account {account.Name}");
-        //         var player = new Player
-        //         {
-        //             Name = name,
-        //             Account = account,
-        //         };
-        //         var region = await World.Db.Regions.Include(region => region.Rooms)
-        //             .FirstOrDefaultAsync();
-        //         
-        //         region.Rooms.FirstOrDefault().AddEntity(player);
-        //         
-        //         account.Player = player;
-        //         await World.Db.SaveChangesAsync();
-        //         
-        //         session.Player = player;
-        //         
-        //         session.CurrentFlow = MainGameFlow.Build();
-        //         await session.CurrentFlow.Start(session, caller);
-        //     })
-        //     .Build("character creation");
+        builder.AddStep(
+            new Message()
+                .Append("Reveal the cipher that guards your soul. ")
+                .AppendLine("[enter password]", new TextColor("gray")),
+            async (api, input) =>
+            {
+                api.StoreTemp("password", input);
+            });
+        
+        builder.AddStep(
+            new Message()
+                .Append("Confirm your cipher to seal the pact. ")
+                .AppendLine("[confirm password]", new TextColor("gray")),
+            async (api, input) =>
+            {
+                if (input != (string)api.GetTemp("password"))
+                {
+                    await api.TellUser(new Message("You have failed to seal the pact."));
+                    api.RemoveTemp("password");
+                    await Task.Delay(1000);
+                    await api.StartFlow(new LoginFlow());
+                }
+                
+                string? name = api.GetTemp("name") as string;
+                string? password = api.GetTemp("password") as string;
+        
+                Console.WriteLine($"Creating new account for {name}");
+                Player player = await api.CreateAccount(name!, password!);
+
+                var characterRace = player.AttachScript<CharacterRace>();
+                characterRace.Race = api.GetTemp("race") as Race;
+                
+                var characterClass = player.AttachScript<CharacterClass>();
+                characterClass.Class = api.GetTemp("class") as Class;
+                
+                var scores = player.AttachScript<AttributeScores>();
+                scores.Generate();
+                
+                api.RemoveTemp("name");
+                api.RemoveTemp("password");
+                api.RemoveTemp("race");
+                api.RemoveTemp("class");
+                
+                await api.TellUser(
+                    new Message()
+                        .AppendLine($"Your pact is sealed, {name}!", new TextColor("cyan"))
+                        .AppendLine($"You are a {characterRace.Race.Name} {characterClass.Class.Name}")
+                        .AppendLine(scores.ToString())
+                        .AppendLine("Welcome to the world of <b>Mythforge: Lengends</b>!", new TextItalic(), new TextGradient("#E3A412", "#D93F7C"))
+                );
+                
+
+                await api.ResumeMainGameFlow();
+            });
+
+
+        
     }
 }

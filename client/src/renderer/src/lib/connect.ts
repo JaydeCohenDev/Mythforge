@@ -30,6 +30,9 @@ export async function connect(): Promise<SignalR.HubConnection>
         connection.start().then(() => {
            // clearTimeout(timeout);
             console.log("Connected!");
+            connection.on("disconnect", () => {
+                connection.stop();
+            });
             return resolve(connection);
         }).catch(err => {
             //clearTimeout(timeout);

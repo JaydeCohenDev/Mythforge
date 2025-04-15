@@ -142,8 +142,9 @@
         overflow-x: hidden;
         scrollbar-color: #222 #111;
         scroll-behavior: smooth;
-        color: white;
+        color: rgb(221, 221, 221);
         font-size: 20px;
+        letter-spacing: 1px;
     }
     .messages {
         padding: 20px;

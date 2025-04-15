@@ -12,4 +12,6 @@ public interface IFlowApi
     void RestartCurrentFlow();
     void FinalizeLogin();
     Task ResumeMainGameFlow();
+    Task<Player> CreateAccount(string accountName, string password);
+    void RestartStep();
 }

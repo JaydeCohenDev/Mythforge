@@ -19,12 +19,12 @@ public class LookCommand : ICommand
         if (room is null) return;
 
         var message = new Message();
-        message.AppendLine(room.Name, new TextColor("Green"), new TextBold());
-        message.AppendLine(room.Description).AppendBreak();
-        room.GetEntities().ForEach(e => message.AppendLine($"> {e.PresenceText}"));
+        message.AppendLine(room.Name, new TextClass("RoomName"), new TextBold());
+        message.AppendLine(room.Description);
+        room.GetEntities().ForEach(e => message.AppendLine($"{e.PresenceText} ", new TextClass("Entity")));
         message.AppendBreak();
         message.AppendLine("Exits:");
-        room.GetExits().ForEach(e => message.AppendLine($"> {e.Name}"));
+        room.GetExits().ForEach(e => message.AppendLine($"> {e.Name}", new TextClass("RoomName")));
         
         player.Tell(message);
     }

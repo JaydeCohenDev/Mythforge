@@ -51,7 +51,15 @@ public class TextGradient(string fromColor, string toColor) : IMessageStyle
 {
     public void Apply(ref string text)
     {
-        text = $"<span style='background-image: linear-gradient({fromColor}, {toColor}); color: transparent; background-clip: text;'>{text}</span>";
+        text = $"<span style='background-image: linear-gradient(to right, {fromColor}, {toColor}); color: transparent; background-clip: text;'>{text}</span>";
+    }
+}
+
+public class TextClass(string className) : IMessageStyle
+{
+    public void Apply(ref string text)
+    {
+        text = $"<span class='{className}'>{text}</span>";
     }
 }
 

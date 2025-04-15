@@ -47,8 +47,6 @@ public class Room
         
         if(!Entities.Contains(entity))
             Entities.Add(entity);
-
-        World.Db.SaveChangesAsync().Wait();
         
         entity.OnEnterRoom(this);
     }

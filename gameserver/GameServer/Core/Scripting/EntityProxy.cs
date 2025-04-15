@@ -33,4 +33,16 @@ public class EntityProxy(Entity entity) : ScriptApi.Entity
             r.AddEntity(e);
         }
     }
+
+    public override T AttachScript<T>()
+    {
+        EntityScript script = Activator.CreateInstance<T>();
+
+        entity.Scripts.Add(new ScriptInstance{
+            ScriptClassName = script.GetType().Name,
+            RuntimeScript = script
+        });
+        
+        return script as T;
+    }
 }

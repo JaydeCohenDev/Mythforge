@@ -2,9 +2,10 @@ body {
   margin: 0;
   min-width: 100vw;
   min-height: 100vh;
-  background-color: #111;
+  background-color: #121212;
 
   overflow: hidden;
+
 }
 
 * {
@@ -12,11 +13,18 @@ body {
 
 }
 
+.RoomName {
+  color: #30b859;
+}
+
+.Entity {
+  color: #e6bd3a;
+}
 
 pre {
   line-height: 1px;
 }
 
 .user-input {
-  color: darkolivegreen;
+  color: rgba(255, 255, 255, 0.247);
 }

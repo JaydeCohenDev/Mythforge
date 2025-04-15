@@ -8,6 +8,7 @@ public delegate Task StepHandler(FlowContext context, PlayerSession session, ICl
 public class FlowContext
 {
     public bool Ended { get; private set; } = false;
+    public bool Continue { get; set; } = true;
 
     public void EndFlow()
     {
@@ -68,7 +69,7 @@ public class FlowBuilder
 
         public override async Task Start(PlayerSession session, IClientProxy caller)
         {
-            Console.WriteLine($"Flow: {Name} - Starting");
+            //Console.WriteLine($"Flow: {Name} - Starting");
             session.TempData["stepIndex"] = 0;
             if(_steps[0].Prompt != null)
                 await ShowMessage(caller, _steps[0].Prompt!);
@@ -77,8 +78,8 @@ public class FlowBuilder
         public override async Task HandleInput(PlayerSession session, IClientProxy caller, string input)
         {
             
-            Console.WriteLine($"Flow: {Name} - Input: {input}");
-            Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(session.TempData));
+            //Console.WriteLine($"Flow: {Name} - Input: {input}");
+            //Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(session.TempData));
 
             
             int stepIndex = (int)session.TempData["stepIndex"];
@@ -90,11 +91,15 @@ public class FlowBuilder
 
             if (context.Ended)
             {
-                Console.WriteLine("STOPPING FLOW: "+ Name);
+                //Console.WriteLine("STOPPING FLOW: "+ Name);
                 return; // Stop flow immediatley
             }
 
-            stepIndex++;
+            if (context.Continue)
+            {
+                stepIndex++;
+            }
+            
             if (stepIndex < _steps.Count)
             {
                 if (_steps[stepIndex].Prompt != null)

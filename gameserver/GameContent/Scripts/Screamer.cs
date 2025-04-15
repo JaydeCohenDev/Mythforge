@@ -1,6 +1,6 @@
 ﻿using ScriptApi;
 
-
+namespace GameContent.Scripts;
 
 public class Screamer : EntityScript
 {

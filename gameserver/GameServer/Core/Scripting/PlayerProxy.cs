@@ -1,4 +1,5 @@
-﻿using ScriptApi;
+﻿using Microsoft.AspNetCore.SignalR;
+using ScriptApi;
 
 namespace GameServer.Core.Scripting;
 
@@ -14,4 +15,10 @@ public class PlayerProxy(Player player) : ScriptApi.Player
     public override ScriptApi.Room? GetRoom() => _entityProxy.GetRoom();
     public override void Tell(Message message) => _entityProxy.Tell(message);
     public override void MoveTo(ScriptApi.Room room) => _entityProxy.MoveTo(room);
+    public override T AttachScript<T>() => _entityProxy.AttachScript<T>();
+
+    public override async Task Disconnect()
+    {
+        await Game.HubContext.Clients.Client(player.GetConnectionId()).SendAsync("disconnect");
+    }
 }
