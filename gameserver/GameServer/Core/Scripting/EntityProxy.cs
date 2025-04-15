@@ -32,6 +32,7 @@ public class EntityProxy(Entity entity) : ScriptApi.Entity
         {
             r.AddEntity(e);
         }
+        World.Db.SaveChanges();
     }
 
     public override T AttachScript<T>()
@@ -42,6 +43,7 @@ public class EntityProxy(Entity entity) : ScriptApi.Entity
             ScriptClassName = script.GetType().Name,
             RuntimeScript = script
         });
+        World.Db.SaveChanges();
         
         return script as T;
     }

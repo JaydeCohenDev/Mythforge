@@ -1,6 +1,8 @@
 ﻿using GameServer.Core.Auth;
 using GameServer.Core.Scripting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Newtonsoft.Json;
 
 namespace GameServer.Core.Database;
 
@@ -45,5 +47,39 @@ public class GameDbContext : DbContext
                 r => r.HasOne<Room>().WithMany().OnDelete(DeleteBehavior.Restrict),
                 r => r.HasOne<Room>().WithMany().OnDelete(DeleteBehavior.Restrict)
             );
+
+        modelBuilder.Entity<ScriptInstance>()
+            .Property(s => s.ScriptData)
+            .HasConversion(
+                s => s,
+                s => s);
+    }
+
+    public override int SaveChanges()
+    {
+        foreach (EntityEntry<ScriptInstance> entry in ChangeTracker.Entries<ScriptInstance>())
+        {
+            ScriptInstance scriptInstance = entry.Entity;
+            if (scriptInstance.RuntimeScript != null)
+            {
+                scriptInstance.ScriptData = JsonConvert.SerializeObject(scriptInstance.RuntimeScript);
+            }
+        }
+
+        return base.SaveChanges();
+    }
+
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
+    {
+        foreach (EntityEntry<ScriptInstance> entry in ChangeTracker.Entries<ScriptInstance>())
+        {
+            ScriptInstance scriptInstance = entry.Entity;
+            if (scriptInstance.RuntimeScript != null)
+            {
+                scriptInstance.ScriptData = JsonConvert.SerializeObject(scriptInstance.RuntimeScript);
+            }
+        }
+        
+        return base.SaveChangesAsync(cancellationToken);
     }
 }
