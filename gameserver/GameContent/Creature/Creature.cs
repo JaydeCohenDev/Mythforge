@@ -17,6 +17,6 @@ public abstract class Creature
     public abstract int Xp { get; }
     public abstract void Attack(Entity target);
     public abstract int GetNumberAppearing(CreatureSpawnContext context);
-    public virtual List<Treasure> GetTreasure() => []; 
+    public virtual List<TreasureType> GetTreasure() => []; 
     public abstract Dictionary<SavingThrow,int> SaveAs { get; }
 }
