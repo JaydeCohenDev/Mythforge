@@ -5,5 +5,6 @@ namespace GameContent.Scripts;
 
 public class CharacterClass : EntityScript
 {
-    public Class Class { get; set; }
+    public required Class Class { get; set; }
+    public int Level { get; set; } = 1;
 }

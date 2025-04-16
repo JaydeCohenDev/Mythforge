@@ -1,6 +1,6 @@
 using ScriptApi.Ability;
 
-namespace GameContent.Abilities;
+namespace GameContent.Abilities.Passive;
 
 public class HalflingCourage : PassiveAbility
 {

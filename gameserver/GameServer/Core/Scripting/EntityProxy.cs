@@ -47,4 +47,12 @@ public class EntityProxy(Entity entity) : ScriptApi.Entity
         
         return script as T;
     }
+
+    public override T? GetScript<T>() where T : class
+    {
+        return entity.Scripts
+            .Select(s => s.RuntimeScript)
+            .OfType<T>()
+            .FirstOrDefault();
+    }
 }

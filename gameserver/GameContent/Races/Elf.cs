@@ -1,4 +1,5 @@
 ﻿using GameContent.Abilities;
+using GameContent.Abilities.Passive;
 using GameContent.Classes;
 using GameContent.Scripts;
 using ScriptApi;
@@ -17,8 +18,7 @@ public class Elf : Race
     public override int GetSavingThrowBonus(SavingThrow savingThrow)
     {
         if(savingThrow == SavingThrow.MagicWands) return 2;
-        if(savingThrow == SavingThrow.Paralysis) return 1;
-        if(savingThrow == SavingThrow.Petrify) return 1;
+        if(savingThrow == SavingThrow.ParalysisPetrify) return 1;
         if(savingThrow == SavingThrow.Spells) return 2;
         return base.GetSavingThrowBonus(savingThrow);
     }

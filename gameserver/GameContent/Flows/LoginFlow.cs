@@ -47,7 +47,8 @@ public class LoginFlow : ScriptFlow
                 .AppendLine("[enter password]", new TextColor("gray")),
                 async (api, input) =>
                 {
-                    bool validLogin = await api.ValidateLogin(api.GetTemp("name") as string, input);
+                    string name = api.GetTemp("name") as string ?? "";
+                    bool validLogin = await api.ValidateLogin(name, input);
                     if(validLogin)
                     {
                         await api.TellUser(new Message("Welcome back, " + api.GetTemp("name") + "!"));

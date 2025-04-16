@@ -1,4 +1,5 @@
 ﻿using GameContent.Abilities;
+using GameContent.Abilities.Passive;
 using GameContent.Classes;
 using ScriptApi;
 using ScriptApi.Ability;

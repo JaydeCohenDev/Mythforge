@@ -1,5 +1,7 @@
-﻿using GameContent.Scripts;
+﻿using GameContent.Abilities.Passive;
+using GameContent.Scripts;
 using ScriptApi;
+using ScriptApi.Ability;
 
 namespace GameContent.Classes;
 
@@ -20,7 +22,10 @@ public abstract class Class
     public abstract string Name { get; init; }
     public abstract  Dictionary<int, ClassLevel> Levels {get;}
     public abstract Message GetDescription();
+    public virtual List<Ability> GetDefaultAbilities() => [];
     public abstract Dictionary<SavingThrow, int> GetSaveScores(int level);
     public virtual bool ValidateScores(AttributeScores scores) => true;
     public virtual bool CanWield(Weapon weapon) => true;
+    public virtual bool CanUseArmor(Armor armor) => true;
+    public virtual bool CanUseShield(Shield shield) => true;
 }

@@ -20,138 +20,97 @@ public class Cleric : Class
 
     public override Dictionary<SavingThrow, int> GetSaveScores(int level)
     {
-        if(level == 1)
+        return level switch
         {
-            return new(){
-                {SavingThrow.DeathRay, 11},
-                {SavingThrow.Poison, 11},
-                {SavingThrow.MagicWands, 12},
-                {SavingThrow.Paralysis, 14},
-                {SavingThrow.Petrify, 14},
-                {SavingThrow.DragonBreath, 16},
-                {SavingThrow.Spells, 15},
-            };
-        } 
-        else if(level >= 2 && level <= 3)
-        {
-            return new(){
-                {SavingThrow.DeathRay, 10},
-                {SavingThrow.Poison, 10},
-                {SavingThrow.MagicWands, 11},
-                {SavingThrow.Paralysis, 13},
-                {SavingThrow.Petrify, 13},
-                {SavingThrow.DragonBreath, 15},
-                {SavingThrow.Spells, 14},
-            };
-        }
-        else if(level >= 4 && level <= 5)
-        {
-            return new(){
-                {SavingThrow.DeathRay, 9},
-                {SavingThrow.Poison, 9},
-                {SavingThrow.MagicWands, 10},
-                {SavingThrow.Paralysis, 13},
-                {SavingThrow.Petrify, 13},
-                {SavingThrow.DragonBreath, 15},
-                {SavingThrow.Spells, 14},
-            };
-        }
-        else if(level >= 6 && level <= 7)
-        {
-            return new(){
-                {SavingThrow.DeathRay, 9},
-                {SavingThrow.Poison, 9},
-                {SavingThrow.MagicWands, 10},
-                {SavingThrow.Paralysis, 12},
-                {SavingThrow.Petrify, 12},
-                {SavingThrow.DragonBreath, 14},
-                {SavingThrow.Spells, 13},
-            };
-        }
-        else if(level >= 8 && level <= 9)
-        {
-            return new(){
-                {SavingThrow.DeathRay, 8},
-                {SavingThrow.Poison, 8},
-                {SavingThrow.MagicWands, 9},
-                {SavingThrow.Paralysis, 12},
-                {SavingThrow.Petrify, 12},
-                {SavingThrow.DragonBreath, 14},
-                {SavingThrow.Spells, 13},
-            };
-        }
-        else if(level >= 10 && level <= 11)
-        {
-            return new(){
-                {SavingThrow.DeathRay, 8},
-                {SavingThrow.Poison, 8},
-                {SavingThrow.MagicWands, 9},
-                {SavingThrow.Paralysis, 11},
-                {SavingThrow.Petrify, 11},
-                {SavingThrow.DragonBreath, 13},
-                {SavingThrow.Spells, 12},
-            };
-        }
-        else if(level >= 12 && level <= 13)
-        {
-            return new(){
-                {SavingThrow.DeathRay, 7},
-                {SavingThrow.Poison, 7},
-                {SavingThrow.MagicWands, 8},
-                {SavingThrow.Paralysis, 11},
-                {SavingThrow.Petrify, 11},
-                {SavingThrow.DragonBreath, 13},
-                {SavingThrow.Spells, 12},
-            };
-        }
-        else if(level >= 14 && level <= 15)
-        {
-            return new(){
-                {SavingThrow.DeathRay, 7},
-                {SavingThrow.Poison, 7},
-                {SavingThrow.MagicWands, 8},
-                {SavingThrow.Paralysis, 10},
-                {SavingThrow.Petrify, 10},
-                {SavingThrow.DragonBreath, 12},
-                {SavingThrow.Spells, 11},
-            };
-        }
-        else if(level >= 16 && level <= 17)
-        {
-            return new(){
-                {SavingThrow.DeathRay, 6},
-                {SavingThrow.Poison, 6},
-                {SavingThrow.MagicWands, 7},
-                {SavingThrow.Paralysis, 10},
-                {SavingThrow.Petrify, 10},
-                {SavingThrow.DragonBreath, 11},
-                {SavingThrow.Spells, 10},
-            };
-        }
-        else if(level >= 18 && level <= 19)
-        {
-            return new(){
-                {SavingThrow.DeathRay, 6},
-                {SavingThrow.Poison, 6},
-                {SavingThrow.MagicWands, 7},
-                {SavingThrow.Paralysis, 9},
-                {SavingThrow.Petrify, 9},
-                {SavingThrow.DragonBreath, 11},
-                {SavingThrow.Spells, 10},
-            };
-        }
-        else
-        {
-            return new(){
-                {SavingThrow.DeathRay, 5},
-                {SavingThrow.Poison, 5},
-                {SavingThrow.MagicWands, 6},
-                {SavingThrow.Paralysis, 9},
-                {SavingThrow.Petrify, 9},
-                {SavingThrow.DragonBreath, 11},
-                {SavingThrow.Spells, 10},
-            };
-        }
+            1 => new Dictionary<SavingThrow, int>
+            {
+                { SavingThrow.DeathRayPoison, 11 },
+                { SavingThrow.MagicWands, 12 },
+                { SavingThrow.ParalysisPetrify, 14 },
+                { SavingThrow.DragonBreath, 16 },
+                { SavingThrow.Spells, 15 },
+            },
+            >= 2 and <= 3 => new Dictionary<SavingThrow, int>
+            {
+                { SavingThrow.DeathRayPoison, 10 },
+                { SavingThrow.MagicWands, 11 },
+                { SavingThrow.ParalysisPetrify, 13 },
+                { SavingThrow.DragonBreath, 15 },
+                { SavingThrow.Spells, 14 },
+            },
+            >= 4 and <= 5 => new Dictionary<SavingThrow, int>
+            {
+                { SavingThrow.DeathRayPoison, 9 },
+                { SavingThrow.MagicWands, 10 },
+                { SavingThrow.ParalysisPetrify, 13 },
+                { SavingThrow.DragonBreath, 15 },
+                { SavingThrow.Spells, 14 },
+            },
+            >= 6 and <= 7 => new Dictionary<SavingThrow, int>
+            {
+                { SavingThrow.DeathRayPoison, 9 },
+                { SavingThrow.MagicWands, 10 },
+                { SavingThrow.ParalysisPetrify, 12 },
+                { SavingThrow.DragonBreath, 14 },
+                { SavingThrow.Spells, 13 },
+            },
+            >= 8 and <= 9 => new Dictionary<SavingThrow, int>
+            {
+                { SavingThrow.DeathRayPoison, 8 },
+                { SavingThrow.MagicWands, 9 },
+                { SavingThrow.ParalysisPetrify, 12 },
+                { SavingThrow.DragonBreath, 14 },
+                { SavingThrow.Spells, 13 },
+            },
+            >= 10 and <= 11 => new Dictionary<SavingThrow, int>
+            {
+                { SavingThrow.DeathRayPoison, 8 },
+                { SavingThrow.MagicWands, 9 },
+                { SavingThrow.ParalysisPetrify, 11 },
+                { SavingThrow.DragonBreath, 13 },
+                { SavingThrow.Spells, 12 },
+            },
+            >= 12 and <= 13 => new Dictionary<SavingThrow, int>
+            {
+                { SavingThrow.DeathRayPoison, 7 },
+                { SavingThrow.MagicWands, 8 },
+                { SavingThrow.ParalysisPetrify, 11 },
+                { SavingThrow.DragonBreath, 13 },
+                { SavingThrow.Spells, 12 },
+            },
+            >= 14 and <= 15 => new Dictionary<SavingThrow, int>
+            {
+                { SavingThrow.DeathRayPoison, 7 },
+                { SavingThrow.MagicWands, 8 },
+                { SavingThrow.ParalysisPetrify, 10 },
+                { SavingThrow.DragonBreath, 12 },
+                { SavingThrow.Spells, 11 },
+            },
+            >= 16 and <= 17 => new Dictionary<SavingThrow, int>
+            {
+                { SavingThrow.DeathRayPoison, 6 },
+                { SavingThrow.MagicWands, 7 },
+                { SavingThrow.ParalysisPetrify, 10 },
+                { SavingThrow.DragonBreath, 11 },
+                { SavingThrow.Spells, 10 },
+            },
+            >= 18 and <= 19 => new Dictionary<SavingThrow, int>
+            {
+                { SavingThrow.DeathRayPoison, 6 },
+                { SavingThrow.MagicWands, 7 },
+                { SavingThrow.ParalysisPetrify, 9 },
+                { SavingThrow.DragonBreath, 11 },
+                { SavingThrow.Spells, 10 },
+            },
+            _ => new Dictionary<SavingThrow, int>
+            {
+                { SavingThrow.DeathRayPoison, 5 },
+                { SavingThrow.MagicWands, 6 },
+                { SavingThrow.ParalysisPetrify, 9 },
+                { SavingThrow.DragonBreath, 11 },
+                { SavingThrow.Spells, 10 },
+            }
+        };
     }
 
     public override Dictionary<int, ClassLevel> Levels => new()

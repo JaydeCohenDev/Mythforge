@@ -1,7 +1,6 @@
-using ScriptApi;
 using ScriptApi.Ability;
 
-namespace GameContent.Abilities;
+namespace GameContent.Abilities.Passive;
 
 public class Darkvision(int rangeInFeet) : PassiveAbility
 {

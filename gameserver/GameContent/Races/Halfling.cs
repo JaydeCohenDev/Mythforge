@@ -1,4 +1,5 @@
 ﻿using GameContent.Abilities;
+using GameContent.Abilities.Passive;
 using GameContent.Classes;
 using GameContent.Scripts;
 using ScriptApi;
@@ -28,11 +29,9 @@ public class Halfling : Race
 
     public override int GetSavingThrowBonus(SavingThrow savingThrow)
     {
-        if(savingThrow == SavingThrow.DeathRay) return 4;
-        if(savingThrow == SavingThrow.Poison) return 4;
+        if(savingThrow == SavingThrow.DeathRayPoison) return 4;
         if(savingThrow == SavingThrow.MagicWands) return 4;
-        if(savingThrow == SavingThrow.Paralysis) return 4;
-        if(savingThrow == SavingThrow.Petrify) return 4;
+        if(savingThrow == SavingThrow.ParalysisPetrify) return 4;
         if(savingThrow == SavingThrow.Spells) return 4;
         if(savingThrow == SavingThrow.DragonBreath) return 3;
         return base.GetSavingThrowBonus(savingThrow);

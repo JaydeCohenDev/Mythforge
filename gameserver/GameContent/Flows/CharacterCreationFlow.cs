@@ -142,9 +142,10 @@ public class CharacterCreationFlow : ScriptFlow
             new Message()
                 .Append("Reveal the cipher that guards your soul. ")
                 .AppendLine("[enter password]", new TextColor("gray")),
-            async (api, input) =>
+            (api, input) =>
             {
                 api.StoreTemp("password", input);
+                return Task.CompletedTask;
             });
         
         builder.AddStep(
@@ -153,7 +154,8 @@ public class CharacterCreationFlow : ScriptFlow
                 .AppendLine("[confirm password]", new TextColor("gray")),
             async (api, input) =>
             {
-                if (input != (string)api.GetTemp("password"))
+                string p = api.GetTemp("password") as string ?? "";
+                if (input != p)
                 {
                     await api.TellUser(new Message("You have failed to seal the pact."));
                     api.RemoveTemp("password");
@@ -168,10 +170,10 @@ public class CharacterCreationFlow : ScriptFlow
                 Player player = await api.CreateAccount(name!, password!);
 
                 var characterRace = player.AttachScript<CharacterRace>();
-                characterRace.Race = api.GetTemp("race") as Race;
+                characterRace.Race = api.GetTemp("race") as Race ?? throw new Exception("Race not set");
                 
                 var characterClass = player.AttachScript<CharacterClass>();
-                characterClass.Class = api.GetTemp("class") as Class;
+                characterClass.Class = api.GetTemp("class") as Class ?? throw new Exception("Class not set");
                 
                 var scores = player.AttachScript<AttributeScores>();
                 scores.Generate();
