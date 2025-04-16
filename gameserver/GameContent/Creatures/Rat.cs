@@ -1,5 +1,6 @@
 ﻿using GameContent.Afflictions;
 using GameContent.Classes;
+using GameContent.Misc;
 using GameContent.Treasures;
 using GameContent.Util;
 using ScriptApi;
@@ -13,8 +14,8 @@ public class RatSwarm : Creature
     public override int ArmorClass => 11;
     public override int Morale => 5;
     public override int Xp => 360;
-    public override int HitDice => Dice.Roll(5, 10);
-    public override Dictionary<SavingThrow,int> SaveAs => 
+    public override HitDice HitDice => new HitDice(5, 10);
+    public override Dictionary<SavingThrow,int> SavingThrows => 
         new Fighter().GetSaveScores(0);
     
     public override void Attack(Entity target)
@@ -36,9 +37,9 @@ public class GiantRat : Creature
     public override int ArmorClass => 13;
     public override int Morale => 8;
     public override int Xp => 10;
-    public override int HitDice => Dice.Roll(1, 4);
+    public override HitDice HitDice => new HitDice(1, 4);
     
-    public override Dictionary<SavingThrow,int> SaveAs => 
+    public override Dictionary<SavingThrow,int> SavingThrows => 
         new Fighter().GetSaveScores(1);
 
     public override List<TreasureType> GetTreasure() => 

@@ -9,3 +9,4 @@ gameserver/GameServer/game.db-wal
 /gameserver/ScriptApi/bin
 /gameserver/GameContent/obj
 /gameserver/GameContent/bin
+/gameserver/WorldGenTest

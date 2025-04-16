@@ -1,4 +1,7 @@
-﻿namespace ScriptApi;
+﻿using Newtonsoft.Json;
+
+namespace ScriptApi;
+
 
 public abstract class Entity
 {
@@ -15,4 +18,28 @@ public abstract class Entity
 
     public abstract void SetName(string name);
     public abstract void SetDescription(string description);
+
+    public void RemoveScript(EntityScript script)
+    {
+        throw new NotImplementedException();
+    }
+}
+
+public class EntityJsonConverter : JsonConverter
+{
+    public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
+    {
+        var entity = (Entity) value!;
+        writer.WriteValue(entity.Id);
+    }
+
+    public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
+    {
+        throw new NotImplementedException();
+    }
+
+    public override bool CanConvert(Type objectType)
+    {
+        return objectType == typeof(Entity);
+    }
 }
