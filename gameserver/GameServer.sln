@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptApi", "ScriptApi\Scri
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameContent", "GameContent\GameContent.csproj", "{64FC8216-B979-4A68-8323-77C693ACBC25}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorldGenTest", "WorldGenTest\WorldGenTest.csproj", "{AFBB8892-6527-4482-B7E9-098CAF50CE94}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,6 +32,10 @@ Global
 		{64FC8216-B979-4A68-8323-77C693ACBC25}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{64FC8216-B979-4A68-8323-77C693ACBC25}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{64FC8216-B979-4A68-8323-77C693ACBC25}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AFBB8892-6527-4482-B7E9-098CAF50CE94}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AFBB8892-6527-4482-B7E9-098CAF50CE94}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AFBB8892-6527-4482-B7E9-098CAF50CE94}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AFBB8892-6527-4482-B7E9-098CAF50CE94}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{55990283-5267-4172-B193-7FD7797DAA48} = {93A958F4-626C-41FA-93F6-AC35E6003393}

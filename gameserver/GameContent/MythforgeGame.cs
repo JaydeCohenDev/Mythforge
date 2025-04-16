@@ -6,6 +6,13 @@ namespace GameContent;
 
 public class MythforgeGame : GameManagerBase
 {
+    public static IScriptApi Api;
+
+    public override void SupplyScriptApi(IScriptApi api)
+    {
+        Api = api;
+    }
+
     public override ScriptFlow GetInitialFlow()
         => new LoginFlow();
 }

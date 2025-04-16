@@ -1,5 +1,6 @@
-﻿using GameContent.Abilities.Passive;
+﻿
 using GameContent.Scripts;
+using Newtonsoft.Json;
 using ScriptApi;
 using ScriptApi.Ability;
 
@@ -12,6 +13,7 @@ public abstract class ClassLevel
     public required int AbilityBonus  {get; init;}
 }
 
+[JsonConverter(typeof(ClassJsonConverter))]
 public abstract class Class
 {
     public static Class Cleric { get; } = new Cleric();
@@ -28,4 +30,23 @@ public abstract class Class
     public virtual bool CanWield(Weapon weapon) => true;
     public virtual bool CanUseArmor(Armor armor) => true;
     public virtual bool CanUseShield(Shield shield) => true;
+}
+
+public class ClassJsonConverter : JsonConverter
+{
+    public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
+    {
+        Class c = (Class) value!;
+        writer.WriteValue(c.GetType().FullName);
+    }
+
+    public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
+    {
+        return Activator.CreateInstance(Type.GetType(reader.Value.ToString()));
+    }
+
+    public override bool CanConvert(Type objectType)
+    {
+        return objectType == typeof(Class);
+    }
 }

@@ -15,10 +15,23 @@ public class ScriptInstance
     public string? ScriptData { get; set; } = string.Empty;
     
     [NotMapped]
+    private ScriptBase? _runtimeScript;
+    [NotMapped]
     public ScriptBase? RuntimeScript
     {
-        get;
-        set;
+        get => _runtimeScript;
+        set
+        {
+            if(_runtimeScript != null)
+                _runtimeScript.OnSaveRequested -= Save;
+            
+            _runtimeScript = value;
+            
+            if(_runtimeScript != null)
+                _runtimeScript.OnSaveRequested += Save;
+            
+            OnRuntimeScriptChanged?.Invoke();
+        }
     }
 
     public void Save()
@@ -34,8 +47,11 @@ public class ScriptInstance
 
         JsonConvert.PopulateObject(ScriptData, RuntimeScript);
     }
-    
-    public ScriptInstance() {}
+
+    public ScriptInstance()
+    {
+        
+    }
 
     public void ReloadRuntimeScript()
     {

@@ -12,7 +12,6 @@ public class World
     {
         var timer = new System.Timers.Timer(2000);
         timer.AutoReset = true;
-
         timer.Elapsed += (object? source, ElapsedEventArgs e) =>
         {
             Tick();
@@ -22,6 +21,10 @@ public class World
 
     public void Tick()
     {
-        Db.Regions.Include(r => r.Rooms).ThenInclude(r => r.Entities).ThenInclude(r => r.Scripts).ForEachAsync(r => r.Tick());
+        Db.Regions
+            .Include(r => r.Rooms)
+            .ThenInclude(r => r.Entities)
+            .ThenInclude(r => r.Scripts)
+            .ForEachAsync(r => r.Tick());
     }
 }

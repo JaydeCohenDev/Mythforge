@@ -10,6 +10,10 @@
       <ProjectReference Include="..\ScriptApi\ScriptApi.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    </ItemGroup>
+
     <Target Name="PostBuild" AfterTargets="PostBuildEvent">
         <Copy SourceFiles="..\GameContent\bin\$(Configuration)\net8.0\GameContent.dll"
               DestinationFiles="..\GameServer\bin\$(Configuration)\net8.0\Scripts\GameContent.dll" />

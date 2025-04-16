@@ -38,11 +38,13 @@ public class EntityProxy(Entity entity) : ScriptApi.Entity
     public override T AttachScript<T>()
     {
         EntityScript script = Activator.CreateInstance<T>();
-
-        entity.Scripts.Add(new ScriptInstance{
+        var scriptInstance = new ScriptInstance
+        {
             ScriptClassName = script.GetType().Name,
             RuntimeScript = script
-        });
+        };
+        entity.Scripts.Add(scriptInstance);
+        script.OnSaveRequested += scriptInstance.Save;
         World.Db.SaveChanges();
         
         return script as T;
@@ -54,5 +56,17 @@ public class EntityProxy(Entity entity) : ScriptApi.Entity
             .Select(s => s.RuntimeScript)
             .OfType<T>()
             .FirstOrDefault();
+    }
+
+    public override void SetName(string name)
+    {
+        entity.Name = name;
+        World.Db.SaveChanges();
+    }
+    
+    public override void SetDescription(string description)
+    {
+        entity.Description = description;
+        World.Db.SaveChanges();
     }
 }

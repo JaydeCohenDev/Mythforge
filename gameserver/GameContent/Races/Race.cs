@@ -1,10 +1,12 @@
 ﻿using GameContent.Classes;
 using GameContent.Scripts;
+using Newtonsoft.Json;
 using ScriptApi;
 using ScriptApi.Ability;
 
 namespace GameContent.Races;
 
+[JsonConverter(typeof(RaceJsonConverter))]
 public abstract class Race
 {
     public static Race Human { get; } = new Human();
@@ -23,4 +25,23 @@ public abstract class Race
 
     public virtual int GetSavingThrowBonus(SavingThrow savingThrow) => 0;
     public virtual List<Ability> GetDefaultAbilities() => [];
+}
+
+public class RaceJsonConverter : JsonConverter
+{
+    public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
+    {
+        Race race = (Race) value!;
+        writer.WriteValue(race.GetType().FullName);
+    }
+
+    public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
+    {
+        return Activator.CreateInstance(Type.GetType(reader.Value.ToString()));
+    }
+
+    public override bool CanConvert(Type objectType)
+    {
+        return objectType == typeof(Race);
+    }
 }

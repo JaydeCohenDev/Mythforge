@@ -4,11 +4,12 @@ using GameContent.Treasures;
 using GameContent.Util;
 using ScriptApi;
 
-namespace GameContent.Creature;
+namespace GameContent.Creatures;
 
 public class RatSwarm : Creature
 {
     public override string Name => "Rat";
+    public override string Description => "A rat swarm.";
     public override int ArmorClass => 11;
     public override int Morale => 5;
     public override int Xp => 360;
@@ -31,6 +32,7 @@ public class RatSwarm : Creature
 public class GiantRat : Creature
 {
     public override string Name => "Giant Rat";
+    public override string Description => "A giant rat.";
     public override int ArmorClass => 13;
     public override int Morale => 8;
     public override int Xp => 10;

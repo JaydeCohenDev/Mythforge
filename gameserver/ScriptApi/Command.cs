@@ -1,6 +1,6 @@
 ﻿namespace ScriptApi;
 
-public interface ICommandBridge
+public interface ICommandApi
 {
     
 }

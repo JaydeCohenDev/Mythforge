@@ -27,6 +27,7 @@ public class GameHub : Hub
         Sessions[Context.ConnectionId] = session;
 
         var gameManager = ScriptManager.Get<GameManagerBase>();
+        gameManager.SupplyScriptApi(new ScriptApiProxy());
         ScriptFlow? initFlow = gameManager?.GetInitialFlow();
         if (initFlow != null)
         {

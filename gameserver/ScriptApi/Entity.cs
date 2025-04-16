@@ -12,5 +12,7 @@ public abstract class Entity
     public abstract void MoveTo(Room room);
     public abstract T AttachScript<T>() where T : EntityScript;
     public abstract T? GetScript<T>() where T : EntityScript;
-    
+
+    public abstract void SetName(string name);
+    public abstract void SetDescription(string description);
 }

@@ -17,6 +17,8 @@ public class PlayerProxy(Player player) : ScriptApi.Player
     public override void MoveTo(ScriptApi.Room room) => _entityProxy.MoveTo(room);
     public override T AttachScript<T>() => _entityProxy.AttachScript<T>();
     public override T? GetScript<T>() where T : class => _entityProxy.GetScript<T>();
+    public override void SetName(string name) => _entityProxy.SetName(name);
+    public override void SetDescription(string description) => _entityProxy.SetDescription(description);
 
     public override async Task Disconnect()
     {
