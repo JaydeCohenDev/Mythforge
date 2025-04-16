@@ -1,11 +1,54 @@
-﻿using ScriptApi;
+﻿using GameContent.Abilities;
+using GameContent.Classes;
+using GameContent.Scripts;
+using ScriptApi;
+using ScriptApi.Ability;
 
 namespace GameContent.Races;
 
 public class Halfling : Race
 {
     public override string Name { get; } = "Halfling";
-    
+    public override List<Class> AllowedClasses => [
+        Class.Cleric, Class.Fighter, Class.Thief
+    ];
+
+    public override int? MaxHitPointsDie => 6;
+
+    public override int RequiredHandsToWield(Weapon weapon)
+    {
+        if(weapon.Size == WeaponSize.Medium) return 2;
+        return base.RequiredHandsToWield(weapon);
+    }
+
+    public override bool CanWield(Weapon weapon)
+    {
+        return weapon.Size < WeaponSize.Large;
+    }
+
+    public override int GetSavingThrowBonus(SavingThrow savingThrow)
+    {
+        if(savingThrow == SavingThrow.DeathRay) return 4;
+        if(savingThrow == SavingThrow.Poison) return 4;
+        if(savingThrow == SavingThrow.MagicWands) return 4;
+        if(savingThrow == SavingThrow.Paralysis) return 4;
+        if(savingThrow == SavingThrow.Petrify) return 4;
+        if(savingThrow == SavingThrow.Spells) return 4;
+        if(savingThrow == SavingThrow.DragonBreath) return 3;
+        return base.GetSavingThrowBonus(savingThrow);
+    }
+
+    public override bool ValidateScores(AttributeScores scores)
+    {
+        return 
+            scores.Dexterity >= 9 &&
+            scores.Strength <= 17;
+    }
+
+    public override List<Ability> GetDefaultAbilities() => [
+        new HalflingAccuracy(), new HalflingCourage(), new HalflingHiding(), new HalflingWit()
+    ];
+
     public override Message GetDescription()
     {
         return new Message()

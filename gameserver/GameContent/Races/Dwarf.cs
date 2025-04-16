@@ -1,10 +1,48 @@
-﻿using ScriptApi;
+﻿using GameContent.Abilities;
+using GameContent.Classes;
+using GameContent.Scripts;
+using ScriptApi;
+using ScriptApi.Ability;
 
 namespace GameContent.Races;
 
 public class Dwarf : Race
 {
     public override string Name { get; } = "Dwarf";
+    public override List<Class> AllowedClasses => [
+        Class.Cleric, Class.Fighter, Class.Thief
+    ];
+
+    public override bool CanWield(Weapon weapon)
+    {
+        if(weapon.Size == WeaponSize.Large)
+            return weapon.LengthInFeet <= 4;
+
+        return true;
+    }
+
+    public override int GetSavingThrowBonus(SavingThrow savingThrow)
+    {
+        if(savingThrow == SavingThrow.DeathRay) return 4;
+        if(savingThrow == SavingThrow.Poison) return 4;
+        if(savingThrow == SavingThrow.MagicWands) return 4;
+        if(savingThrow == SavingThrow.Paralysis) return 4;
+        if(savingThrow == SavingThrow.Petrify) return 4;
+        if(savingThrow == SavingThrow.Spells) return 4;
+        if(savingThrow == SavingThrow.DragonBreath) return 3;
+        return base.GetSavingThrowBonus(savingThrow);
+    }
+
+    public override bool ValidateScores(AttributeScores scores)
+    {
+        return 
+            scores.Constitution >= 9 &&
+            scores.Charisma <= 17;
+    }
+
+    public override List<Ability> GetDefaultAbilities() => [
+        new Darkvision(60), new DwarvenSight()
+    ];
 
     public override Message GetDescription()
     {

@@ -1,10 +1,37 @@
-﻿using ScriptApi;
+﻿using GameContent.Abilities;
+using GameContent.Classes;
+using GameContent.Scripts;
+using ScriptApi;
+using ScriptApi.Ability;
 
 namespace GameContent.Races;
 
 public class Elf : Race
 {
     public override string Name { get; } = "Elf";
+    public override int? MaxHitPointsDie => 6;
+    public override List<Class> AllowedClasses => [
+        Class.Cleric, Class.Fighter, Class.MagicUser, Class.Thief
+    ];
+
+    public override int GetSavingThrowBonus(SavingThrow savingThrow)
+    {
+        if(savingThrow == SavingThrow.MagicWands) return 2;
+        if(savingThrow == SavingThrow.Paralysis) return 1;
+        if(savingThrow == SavingThrow.Petrify) return 1;
+        if(savingThrow == SavingThrow.Spells) return 2;
+        return base.GetSavingThrowBonus(savingThrow);
+    }
+
+    public override bool ValidateScores(AttributeScores scores)
+    {
+        return 
+            scores.Intelligence >= 9 &&
+            scores.Constitution <= 17;
+    }
+
+    public override List<Ability> GetDefaultAbilities() =>
+        [new Darkvision(60), new ElvenSight(), new ElvenImmunity(), new ElvenAwareness()];
 
     public override Message GetDescription()
     {

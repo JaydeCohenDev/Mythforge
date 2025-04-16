@@ -1,11 +1,21 @@
-﻿using ScriptApi;
+﻿using GameContent.Abilities;
+using GameContent.Classes;
+using ScriptApi;
+using ScriptApi.Ability;
 
 namespace GameContent.Races;
 
 public class Human : Race
 {
     public override string Name { get; } = "Human";
-    
+    public override List<Class> AllowedClasses => [
+        Class.Cleric, Class.Fighter, Class.MagicUser, Class.Thief
+    ];
+
+    public override List<Ability> GetDefaultAbilities() => [
+        new HumanLearning()
+    ];
+
     public override Message GetDescription()
     {
         return new Message()
