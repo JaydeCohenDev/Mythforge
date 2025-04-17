@@ -135,12 +135,9 @@ namespace GameServer.Migrations
                     b.Property<int?>("RoomId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("ScriptClassName")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ScriptData")
-                        .HasColumnType("TEXT");
+                    b.Property<string>("RuntimeScript")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("ScriptData");
 
                     b.HasKey("Id");
 

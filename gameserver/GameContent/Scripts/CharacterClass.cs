@@ -7,7 +7,8 @@ namespace GameContent.Scripts;
 
 public class CharacterClass : EntityScript
 {
-    public required Class Class { get; set; }
-    public int Level { get; set; } = 1;
+    
+    [Persist] public required Class Class { get; set; }
+    [Persist] public virtual int Level { get; set; } = 1;
 }
 

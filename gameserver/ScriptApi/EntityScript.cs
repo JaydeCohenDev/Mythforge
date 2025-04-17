@@ -4,8 +4,7 @@ namespace ScriptApi;
 
 public abstract class EntityScript : ScriptBase
 {
-    [JsonIgnore]
-    public required Entity Entity { get; set; }
+    [JsonIgnore] public required Entity Entity;
     
     public virtual void OnSpawn() {}
     public virtual void OnGreet(Entity greeter) {}

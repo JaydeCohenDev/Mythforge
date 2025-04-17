@@ -21,6 +21,7 @@ public class Entity
     {
         Scripts.ForEach(s =>
         {
+            s.DetectChanges();
             var script = (s.RuntimeScript as EntityScript);
             // if (script != null)
             // {

@@ -3,6 +3,7 @@ using GameServer.Core.Scripting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Newtonsoft.Json;
+using ScriptApi;
 
 namespace GameServer.Core.Database;
 
@@ -49,37 +50,67 @@ public class GameDbContext : DbContext
             );
 
         modelBuilder.Entity<ScriptInstance>()
-            .Property(s => s.ScriptData)
+            .Property(si => si.RuntimeScript)
             .HasConversion(
-                s => s,
-                s => s);
+                // Serialize ScriptBase (RuntimeScript) -> JSON string for save
+                v => SerializeScript(v),
+
+                // Deserialize JSON string -> ScriptBase for load
+                v => DeserializeScript(v)
+
+            )
+            .HasColumnName("ScriptData");
     }
 
-    public override int SaveChanges()
+    private static string? SerializeScript(ScriptBase? script)
     {
-        foreach (EntityEntry<ScriptInstance> entry in ChangeTracker.Entries<ScriptInstance>())
-        {
-            ScriptInstance scriptInstance = entry.Entity;
-            if (scriptInstance.RuntimeScript != null)
-            {
-                scriptInstance.ScriptData = JsonConvert.SerializeObject(scriptInstance.RuntimeScript);
-            }
-        }
+        if (script == null) return null;
 
-        return base.SaveChanges();
-    }
-
-    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
-    {
-        foreach (EntityEntry<ScriptInstance> entry in ChangeTracker.Entries<ScriptInstance>())
-        {
-            ScriptInstance scriptInstance = entry.Entity;
-            if (scriptInstance.RuntimeScript != null)
-            {
-                scriptInstance.ScriptData = JsonConvert.SerializeObject(scriptInstance.RuntimeScript);
-            }
-        }
+        Console.WriteLine($"Serializing script of type '{script.GetType().FullName}'.");
         
-        return base.SaveChangesAsync(cancellationToken);
+        // Include ScriptClassName and the script data in serialization
+        var scriptData = new
+        {
+            ScriptClassName = script.GetType().Name,
+            Data = script.SerializePersistedProperties()
+        };
+
+        return JsonConvert.SerializeObject(scriptData);
     }
+
+    private static ScriptBase? DeserializeScript(string? scriptData)
+    {
+        if (string.IsNullOrEmpty(scriptData)) return null;
+
+        // Deserialize wrapper object to extract ScriptClassName and actual data
+        var deserializedData = JsonConvert.DeserializeObject<dynamic>(scriptData);
+        if (deserializedData == null) return null;
+
+        string? scriptClassName = deserializedData.ScriptClassName;
+        string? data = deserializedData.Data;
+
+        if (string.IsNullOrEmpty(scriptClassName) || string.IsNullOrEmpty(data))
+        {
+            throw new InvalidOperationException("Invalid script data or missing ScriptClassName.");
+        }
+
+        // Create an instance of the ScriptBase subclass
+        var script = ScriptManager.CreateScript<ScriptBase>(scriptClassName);
+        if (script == null)
+        {
+            throw new InvalidCastException($"Unable to cast type '{scriptClassName}' to ScriptBase.");
+        }
+
+        // Populate the ScriptBase object using the JSON data
+        JsonConvert.PopulateObject(data, script);
+
+        // Attach event handlers for tracking changes
+        script.OnSaveRequested += () =>
+        {
+            Console.WriteLine($"Change detected and save requested for script of type '{scriptClassName}'.");
+        };
+
+        return script;
+    }
+
 }

@@ -37,17 +37,20 @@ public class EntityProxy(Entity entity) : ScriptApi.Entity
 
     public override T AttachScript<T>()
     {
-        EntityScript script = Activator.CreateInstance<T>();
+        var script = Activator.CreateInstance<T>();
         var scriptInstance = new ScriptInstance
         {
-            ScriptClassName = script.GetType().Name,
             RuntimeScript = script
         };
         entity.Scripts.Add(scriptInstance);
-        script.OnSaveRequested += scriptInstance.Save;
-        World.Db.SaveChanges();
-        
-        return script as T;
+
+        World.Db.SaveChangesAsync().Wait();
+
+
+
+        var result = scriptInstance.RuntimeScript;
+        return result as T ?? throw new InvalidOperationException("Failed to retrieve script as the correct type.");
+
     }
 
     public override T? GetScript<T>() where T : class

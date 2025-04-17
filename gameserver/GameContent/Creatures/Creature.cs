@@ -30,8 +30,22 @@ public abstract class Creature
     {
         entity.SetName(Name);
         entity.SetDescription(Description);
+        
+        
         var script = entity.AttachScript<CreatureScript>();
+
+        if (script == null)
+            throw new InvalidOperationException("Failed to attach or retrieve the CreatureScript proxy.");
+        
+        // Confirm the type to avoid runtime NullReferenceExceptions
+        Console.WriteLine($"Using script of type: {script.GetType().Name}");
+        if (!(script is CreatureScript))
+        {
+            throw new InvalidCastException($"Script is not of the expected type {nameof(CreatureScript)}.");
+        }
+
         script.SetCreatureType(this);
+
     }
 
     public bool MakeSavingThrow(SavingThrow savingThrow, int modifier)
@@ -56,7 +70,13 @@ public class CreatureJsonConverter : JsonConverter
 
     public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
     {
-        return Activator.CreateInstance(Type.GetType(reader.Value.ToString()));
+        if (reader.Value != null)
+        {
+            var type = Type.GetType(reader.Value.ToString());
+            if (type == null) return null;
+            return Activator.CreateInstance(type);
+        }
+        return null;
     }
 
     public override bool CanConvert(Type objectType)

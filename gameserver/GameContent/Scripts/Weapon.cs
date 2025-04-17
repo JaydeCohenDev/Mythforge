@@ -14,9 +14,9 @@ public enum WeaponKind {
 
 public class Weapon : ItemScript
 {
-    public WeaponSize Size {get; set;}
-    public WeaponType Type {get; set;}
-    public WeaponKind Kind {get; set;}
-    public int LengthInFeet {get; set;}
-    public int RequiredHandsToWield {get;set;}
+    public virtual WeaponSize Size {get; set;}
+    public virtual WeaponType Type {get; set;}
+    public virtual WeaponKind Kind {get; set;}
+    public virtual int LengthInFeet {get; set;}
+    public virtual int RequiredHandsToWield {get;set;}
 }

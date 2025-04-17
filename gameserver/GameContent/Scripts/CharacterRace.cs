@@ -5,5 +5,5 @@ namespace GameContent.Scripts;
 
 public class CharacterRace : EntityScript
 {
-    public required Race Race { get; set; }
+    [Persist] public required Race Race { get; set; }
 }

@@ -1,7 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using Newtonsoft.Json;
+﻿using GameServer.Core.Database;
+using Microsoft.EntityFrameworkCore;
 using ScriptApi;
-using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace GameServer.Core.Scripting;
 
@@ -10,54 +9,75 @@ public class ScriptInstance
     public Action? OnRuntimeScriptChanged;
     
     public int Id { get; set; }
-    public string ScriptClassName { get; set; } = string.Empty;
+
+    private int _lastChangeCode = -1;
     
-    public string? ScriptData { get; set; } = string.Empty;
-    
-    [NotMapped]
     private ScriptBase? _runtimeScript;
-    [NotMapped]
+
     public ScriptBase? RuntimeScript
     {
         get => _runtimeScript;
         set
         {
-            if(_runtimeScript != null)
-                _runtimeScript.OnSaveRequested -= Save;
-            
+            // Unsubscribe existing event handlers if applicable
+            if (_runtimeScript != null)
+            {
+                _runtimeScript.OnPropertyChangedExternally -= HandleRuntimeScriptChange;
+            }
+
+            // Set new value
             _runtimeScript = value;
             
-            if(_runtimeScript != null)
-                _runtimeScript.OnSaveRequested += Save;
-            
+            // Subscribe to property change handling for the new instance
+            if (_runtimeScript != null)
+            {
+                Console.WriteLine($"Tracking changes for script {_runtimeScript.GetType().Name}");
+                value.TrackChanges();
+                _runtimeScript.OnPropertyChangedExternally += HandleRuntimeScriptChange;
+            }
+
+            // Trigger any additional logic or notifications
             OnRuntimeScriptChanged?.Invoke();
         }
     }
 
-    public void Save()
+    private bool _isModified = false;
+
+    private void HandleRuntimeScriptChange(string propertyName)
     {
-        if (RuntimeScript == null) return;
-        
-        ScriptData = JsonConvert.SerializeObject(RuntimeScript);
+        Console.WriteLine($"Detected change in RuntimeScript property '{propertyName}'.");
+        _isModified = true; // Mark the instance as having unsaved changes
+        DetectChanges();
     }
 
-    public void Load()
-    {
-        if(ScriptData is null || RuntimeScript is null) return;
-
-        JsonConvert.PopulateObject(ScriptData, RuntimeScript);
-    }
 
     public ScriptInstance()
     {
         
     }
 
+    public void DetectChanges()
+    {
+        if (RuntimeScript != null)
+        {
+            RuntimeScript.TrackChanges(); // Maintain proper tracking of [Persist]-annotated properties
+        }
+
+        if (_isModified) // Only update DB if changes are detected
+        {
+            _isModified = false; // Reset the modified flag
+            using GameDbContext Db = new();
+            Db.Entry(this).State = EntityState.Modified;
+            Db.SaveChanges();
+        }
+
+    }
+
     public void ReloadRuntimeScript()
     {
-        RuntimeScript = ScriptManager.CreateScript<ScriptBase>(ScriptClassName);
-        Load();
-        OnRuntimeScriptChanged?.Invoke();
-        Console.WriteLine($"Reloaded script {ScriptClassName}");
+        //RuntimeScript = ScriptManager.CreateScript<ScriptBase>(ScriptClassName);
+        //Load();
+        //OnRuntimeScriptChanged?.Invoke();
+        //Console.WriteLine($"Reloaded script {ScriptClassName}");
     }
 }

@@ -107,10 +107,6 @@ public static class ScriptManager
 
     private static void PostScriptPackageLoad(LoadedScriptAssembly? scriptPackage)
     {
-        World.Db.ScriptInstances.ForEachAsync(s =>
-        {
-            s.ReloadRuntimeScript();
-        });
 
         if (scriptPackage == null) return;
         scriptPackage.Assembly.GetTypes().Where(t => t.IsAssignableTo(typeof(ScriptApi.ICommand)) && !t.IsAbstract)

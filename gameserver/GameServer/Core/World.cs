@@ -21,10 +21,13 @@ public class World
 
     public void Tick()
     {
+        
         Db.Regions
             .Include(r => r.Rooms)
             .ThenInclude(r => r.Entities)
             .ThenInclude(r => r.Scripts)
             .ForEachAsync(r => r.Tick());
+        
+        
     }
 }

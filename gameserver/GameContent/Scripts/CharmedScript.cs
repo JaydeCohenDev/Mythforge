@@ -14,9 +14,9 @@ public enum CharmFollowState
 
 public class CharmedScript : EntityScript
 {
-    public Entity Master { get; set; }
-    public CharmAggressionState AggressionState { get; set; } = CharmAggressionState.Neutral;
-    public CharmFollowState FollowState { get; set; } = CharmFollowState.Follow;
+    public virtual Entity Master { get; set; }
+    public virtual CharmAggressionState AggressionState { get; set; } = CharmAggressionState.Neutral;
+    public virtual CharmFollowState FollowState { get; set; } = CharmFollowState.Follow;
 
     public void TryNegate()
     {
