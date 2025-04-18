@@ -4,7 +4,7 @@ namespace GameServer.Core.Scripting;
 
 public class RoomProxy(Room room) : ScriptApi.Room
 {
-    public override int Id => room.Id;
+    public override Guid Id => room.Id;
     public override string Name => room.Name;
     public override string Description => room.Description;
     

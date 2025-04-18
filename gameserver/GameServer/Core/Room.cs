@@ -10,23 +10,24 @@ namespace GameServer.Core;
 
 public class Room
 {
-    public static readonly Dictionary<string, Room> All = [];
+    public static readonly Dictionary<Guid, Room> All = [];
 
-    public int Id { get; set; }
+    public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
     
     public List<string> Tags { get; set; } = [];
-    public virtual List<Entity> Entities { get; init; } = [];
+    public List<Entity> Entities { get; init; } = [];
 
    [JsonConverter(typeof(RoomListJsonConverter))]
-    public virtual List<Room> Exits { get; } = [];
+    public List<Room> Exits { get; } = [];
     
-    public virtual List<ScriptInstance> Scripts { get; init; } = [];
+    public List<ScriptInstance> Scripts { get; init; } = [];
 
     public Room()
     {
-
+        Id = Guid.NewGuid();
+        All.Add(Id, this);
     }
 
     public Room Link(Room room)

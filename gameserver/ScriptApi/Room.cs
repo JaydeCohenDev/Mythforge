@@ -1,7 +1,7 @@
 ﻿namespace ScriptApi;
 public abstract class Room
 {
-    public virtual int Id { get; init; }
+    public virtual Guid Id { get; init; }
     public virtual string Name { get; init; } = string.Empty;
     public virtual string Description { get; init; } = string.Empty;
 

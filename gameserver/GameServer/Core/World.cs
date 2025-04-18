@@ -1,12 +1,10 @@
 using System.Timers;
-using GameServer.Core.Database;
-using Microsoft.EntityFrameworkCore;
 
 namespace GameServer.Core;
 
 public class World
 {
-    public static GameDbContext Db { get; } = new();
+    public List<Region> Regions = [];
 
     public World()
     {
@@ -21,13 +19,6 @@ public class World
 
     public void Tick()
     {
-        
-        Db.Regions
-            .Include(r => r.Rooms)
-            .ThenInclude(r => r.Entities)
-            .ThenInclude(r => r.Scripts)
-            .ForEachAsync(r => r.Tick());
-        
-        
+       Regions.ForEach(r => r.Tick());
     }
 }

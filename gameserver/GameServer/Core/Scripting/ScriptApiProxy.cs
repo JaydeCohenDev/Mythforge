@@ -6,7 +6,7 @@ public class ScriptApiProxy : IScriptApi
 {
     public async Task<ScriptApi.Entity> SpawnEntity(ScriptApi.Room room)
     {
-        var r = await World.Db.FindAsync<Room>(room.Id);
+        Room.All.TryGetValue(room.Id, out var r);
         
         var e = new Entity();
         r?.AddEntity(e);

@@ -42,7 +42,6 @@ public class GameHub : Hub
         Player player = Sessions[Context.ConnectionId].Player;
         player.LoginRoom = player.CurrentRoom!;
         player.CurrentRoom?.Entities.Remove(player);
-        await World.Db.SaveChangesAsync();
         
         Sessions.Remove(Context.ConnectionId);
     }

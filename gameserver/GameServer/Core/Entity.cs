@@ -6,6 +6,8 @@ namespace GameServer.Core;
 
 public class Entity
 {
+    public static readonly Dictionary<Guid, Entity> All = [];
+
     public Guid Id { get; init; }
     public virtual string Name { get; set; } = string.Empty;
     public string? PressenceText { get; set; }
@@ -17,27 +19,18 @@ public class Entity
     [JsonIgnore]
     public virtual Room? CurrentRoom { get; private set; }
 
+    public Entity()
+    {
+        Id = Guid.NewGuid();
+        All.Add(Id, this);
+    }
+
     public virtual void Tick()
     {
         Scripts.ForEach(s =>
         {
-            // WORKS IF I ADD THIS, but i dont want to poll
-            //s.DetectChanges();
             var script = (s.RuntimeScript as EntityScript);
-            // if (script != null)
-            // {
-            //     if (script.Entity == null)
-            //     {
-            //         script.Entity = new ScriptApi.Entity(new EntityProxy())
-            //         {
-            //             Name = Name,
-            //             Description = Description,
-            //             Id = Id,
-            //             PresenceText = ToPressenceString()
-            //         };
-            //     }
-            //     script.OnUpdate();
-            // }
+            script?.OnUpdate();
         });
     }
 

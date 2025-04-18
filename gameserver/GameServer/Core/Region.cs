@@ -4,12 +4,12 @@ namespace GameServer.Core;
 
 public class Region
 {
-    public static readonly Dictionary<string, Region> All = [];
+    
 
-    public int Id { get; set; }
+    public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
-    public virtual List<Room> Rooms { get; set; } = [];
+    public List<Room> Rooms { get; } = [];
 
     
     

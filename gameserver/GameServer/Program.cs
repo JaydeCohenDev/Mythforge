@@ -1,16 +1,11 @@
 
 
 using GameServer.Core;
-using GameServer.Core.Database;
 using GameServer.Core.Scripting;
 using GameServer.Hubs;
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.EntityFrameworkCore;
-using ScriptApi;
 
 WebApplicationBuilder? builder = WebApplication.CreateBuilder(args);
-
-builder.Services.AddDbContext<GameDbContext>();
 
 builder.Services.AddCors(options =>
 {
@@ -43,6 +38,8 @@ ScriptManager.Init();
 
 
 Game.HubContext = hub!;
-Game.Init();
+await Game.Init();
 
 app.Run();
+
+await Game.Save();

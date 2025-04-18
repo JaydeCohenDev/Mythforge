@@ -31,7 +31,7 @@ public class ScriptFlowBuilder : ScriptApi.Flow.ScriptFlowBuilder
 
         public async Task<bool> HasAccount(string accountName)
         {
-            Account? account = await World.Db.Accounts.FirstOrDefaultAsync(x => x.Name == accountName);
+            Account? account = Game.Accounts.FirstOrDefault(x => x.Name == accountName);
             return account != null;
         }
 
@@ -47,7 +47,7 @@ public class ScriptFlowBuilder : ScriptApi.Flow.ScriptFlowBuilder
 
         public async Task<bool> ValidateLogin(string accountName, string pass)
         {
-            Account? account = await World.Db.Accounts.Include(account => account.Player).FirstOrDefaultAsync(x => x.Name == accountName);
+            Account? account = Game.Accounts.FirstOrDefault(x => x.Name == accountName);
             if (account == null) return false;
             if (account.Password == pass)
             {
@@ -84,7 +84,7 @@ public class ScriptFlowBuilder : ScriptApi.Flow.ScriptFlowBuilder
         public async Task<ScriptApi.Player> CreateAccount(string name, string password)
         {
             var account = new Account { Name = name, Password = password };
-            World.Db.Accounts.Add(account);
+            Game.Accounts.Add(account);
         
             session.Account = account;
             
@@ -93,13 +93,11 @@ public class ScriptFlowBuilder : ScriptApi.Flow.ScriptFlowBuilder
                 Name = name,
                 Account = account,
             };
-            Region? region = await World.Db.Regions.Include(region => region.Rooms)
-                .FirstOrDefaultAsync();
+            Region? region = Game.World.Regions.FirstOrDefault();
                 
             region?.Rooms.FirstOrDefault()?.AddEntity(player);
                 
             account.Player = player;
-            await World.Db.SaveChangesAsync();
                 
             session.Player = player;
 

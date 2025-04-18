@@ -26,13 +26,13 @@ public class EntityProxy(Entity entity) : ScriptApi.Entity
 
     public override void MoveTo(ScriptApi.Room room)
     {
-        Room? r = World.Db.Rooms.Find(room.Id);
-        Entity? e = World.Db.Entities.Find(entity.Id);
-        if (r is not null && e is not null)
-        {
-            r.AddEntity(e);
-        }
-        World.Db.SaveChanges();
+        if(!Room.All.TryGetValue(room.Id, out Room? r))
+            throw new InvalidOperationException($"Room with ID {room.Id} not found.");
+
+        if(!Entity.All.TryGetValue(entity.Id, out var e))
+            throw new InvalidOperationException($"Entity with ID {entity.Id} not found.");
+
+        r.AddEntity(e);
     }
 
     public override T AttachScript<T>()
@@ -43,13 +43,8 @@ public class EntityProxy(Entity entity) : ScriptApi.Entity
             RuntimeScript = script
         };
         entity.Scripts.Add(scriptInstance);
-
-        World.Db.SaveChangesAsync().Wait();
-
-
-        var result = World.Db.Entry(scriptInstance).Entity.RuntimeScript;
-        result?.TrackChanges();
-        return result as T ?? throw new InvalidOperationException("Failed to retrieve script as the correct type.");
+        
+        return script as T ?? throw new InvalidOperationException("Failed to retrieve script as the correct type.");
 
     }
 
@@ -64,12 +59,10 @@ public class EntityProxy(Entity entity) : ScriptApi.Entity
     public override void SetName(string name)
     {
         entity.Name = name;
-        World.Db.SaveChanges();
     }
     
     public override void SetDescription(string description)
     {
         entity.Description = description;
-        World.Db.SaveChanges();
     }
 }
