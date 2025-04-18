@@ -103,6 +103,7 @@ public class GameDbContext : DbContext
 
         // Populate the ScriptBase object using the JSON data
         JsonConvert.PopulateObject(data, script);
+        script.TrackChanges();
 
         // Attach event handlers for tracking changes
         script.OnSaveRequested += () =>

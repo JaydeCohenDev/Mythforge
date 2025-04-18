@@ -47,7 +47,9 @@ public class ScriptInstance
     {
         Console.WriteLine($"Detected change in RuntimeScript property '{propertyName}'.");
         _isModified = true; // Mark the instance as having unsaved changes
-        DetectChanges();
+        
+        World.Db.Entry(this).State = EntityState.Modified;
+        World.Db.SaveChangesAsync().Wait();
     }
 
 
@@ -66,9 +68,16 @@ public class ScriptInstance
         if (_isModified) // Only update DB if changes are detected
         {
             _isModified = false; // Reset the modified flag
-            using GameDbContext Db = new();
-            Db.Entry(this).State = EntityState.Modified;
-            Db.SaveChanges();
+            
+            var entry = World.Db.Entry(this);
+            if (entry.State == EntityState.Detached)
+            {
+                Console.WriteLine("Entity is detached. Reloading...");
+                entry.Reload(); // Reload from the database to ensure the entity is valid
+            }
+
+            World.Db.SaveChangesAsync().Wait();
+
         }
 
     }

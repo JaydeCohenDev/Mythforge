@@ -47,8 +47,8 @@ public class EntityProxy(Entity entity) : ScriptApi.Entity
         World.Db.SaveChangesAsync().Wait();
 
 
-
-        var result = scriptInstance.RuntimeScript;
+        var result = World.Db.Entry(scriptInstance).Entity.RuntimeScript;
+        result?.TrackChanges();
         return result as T ?? throw new InvalidOperationException("Failed to retrieve script as the correct type.");
 
     }

@@ -25,12 +25,15 @@ public abstract class ScriptBase : INotifyPropertyChanged
     
     protected virtual void OnPropertyChanged(string propertyName)
     {
+        Console.WriteLine($"Detected property change of {GetType().Name}.{propertyName}");
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         OnPropertyChangedExternally?.Invoke(propertyName); // Trigger external action
     }
 
     public void TrackChanges()
     {
+        Console.WriteLine($"Starting tracking of {GetType().Name} {this}");
+        
         // Get all properties with the [Persist] attribute
         var trackedProperties = GetType()
             .GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)

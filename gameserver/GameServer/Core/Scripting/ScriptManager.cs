@@ -53,7 +53,9 @@ public static class ScriptManager
                     if (scriptType != null)
                     {
                         // Create and return an instance of the script
-                        return Activator.CreateInstance(scriptType) as T;
+                        var script = Activator.CreateInstance(scriptType) as T;
+                        script?.TrackChanges();
+                        return script;
                     }
                 }
                 catch (ReflectionTypeLoadException ex)

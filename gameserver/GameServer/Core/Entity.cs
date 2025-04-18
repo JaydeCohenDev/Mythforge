@@ -21,7 +21,8 @@ public class Entity
     {
         Scripts.ForEach(s =>
         {
-            s.DetectChanges();
+            // WORKS IF I ADD THIS, but i dont want to poll
+            //s.DetectChanges();
             var script = (s.RuntimeScript as EntityScript);
             // if (script != null)
             // {
