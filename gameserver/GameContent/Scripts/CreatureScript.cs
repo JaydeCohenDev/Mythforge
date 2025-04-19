@@ -5,11 +5,11 @@ namespace GameContent.Scripts;
 
 public class CreatureScript : EntityScript
 {
-    [Persist] public Creature Creature { get; set; }
+    [Persist] public Creature? CreatureType { get; set; }
     
-    public void SetCreatureType(Creature creature)
+    public void SetCreatureType(Creature creatureType)
     {
-        Console.WriteLine($"Setting creature type to {creature.Name}");
-        Creature = creature;
+        Console.WriteLine($"Setting creature type to {creatureType.Name}");
+        CreatureType = creatureType;
     }
 }

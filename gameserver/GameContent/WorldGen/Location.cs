@@ -2,5 +2,5 @@
 
 public class Location()
 {
-    public Biome Biome { get; set; }
+    public Biome Biome { get; set; } = null!;
 }

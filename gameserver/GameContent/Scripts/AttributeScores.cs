@@ -22,6 +22,17 @@ public class AttributeScores : EntityScript
         Charisma = Dice.Roll(3, 6);
     }
 
+    public void DrainConstitution(int amount = 1)
+    {
+        Constitution = Math.Max(0, Constitution - amount);
+
+        if(Constitution <= 0)
+        {
+            Entity.Tell(new Message("You're constition is depleted. You have been slain."));
+            Entity.Kill();
+        }
+    }
+
     public override string ToString()
     {
         return

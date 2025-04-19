@@ -14,13 +14,13 @@ public class CharmPerson : Spell
     public override void Activate(Entity user, Entity target)
     {
         var creature = target.GetScript<CreatureScript>();
-        if (creature == null)
+        if (creature == null || creature.CreatureType == null)
         {
             user.Tell(new Message("That is not a valid target"));
             return;
         }
 
-        if (creature.Creature.HitDice.Num > 4)
+        if (creature.CreatureType.HitDice.Num > 4)
         {
             user.Tell(new Message("That creature is too powerful to be affected by this spell"));
             return;
@@ -28,7 +28,7 @@ public class CharmPerson : Spell
 
         bool isTargetThreatened = false;
 
-        if (!creature.Creature.MakeSavingThrow(SavingThrow.Spells, isTargetThreatened ? 5 : 0))
+        if (!creature.CreatureType.MakeSavingThrow(SavingThrow.Spells, isTargetThreatened ? 5 : 0))
         {
             user.Tell(new Message($"{target.Name} resists the effects!"));
             return;

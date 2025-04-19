@@ -12,12 +12,34 @@ public static class EntityExtensions
         return c?.Level ?? 0;
     }
 
-    public static int ApplyAffliction(this Entity entity, Affliction affliction)
+    public static void ApplyAffliction(this Entity entity, Affliction affliction)
+    {
+        affliction.Apply(entity);
+    }
+
+    public static void ApplyDamage(this Entity entity, int damage)
     {
         throw new NotImplementedException();
     }
 
-    public static int ApplyDamage(this Entity entity, int damage)
+    public static bool MakeSavingThrow(this Entity entity, SavingThrow savingThrow)
+    {
+        var creature = entity.GetScript<CreatureScript>();
+        if(creature?.CreatureType != null)
+        {
+            return creature.CreatureType.MakeSavingThrow(savingThrow, 0);
+        }
+
+        var character = entity.GetScript<CharacterScript>();
+        if(character != null)
+        {
+            return character.MakeSavingThrow(savingThrow, 0);
+        }
+
+        return false;
+    }
+
+    public static void Kill(this Entity entity) 
     {
         throw new NotImplementedException();
     }

@@ -22,7 +22,12 @@ public class SpawnCommand : ICommand
         }
         var creature = (Creature?)Activator.CreateInstance(creatureType);
 
-        var entity = await MythforgeGame.Api.SpawnEntity(player.GetRoom());
-        creature.ApplyTo(entity);
+        var room = player.GetRoom();
+        if (room == null) return;
+        if (MythforgeGame.Api != null)
+        {
+            var entity = await MythforgeGame.Api.SpawnEntity(room);
+            creature?.ApplyTo(entity);
+        }
     }
 }

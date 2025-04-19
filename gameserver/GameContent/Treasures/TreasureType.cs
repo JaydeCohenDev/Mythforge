@@ -136,7 +136,10 @@ public class JewelryTreasure : TreasureType
     }
 }
 
-public class MagicItemsTreasure(int num) : TreasureType
+public class MagicItemsTreasure : TreasureType
 {
-    
+    public MagicItemsTreasure(int num)
+    {
+        
+    }
 }

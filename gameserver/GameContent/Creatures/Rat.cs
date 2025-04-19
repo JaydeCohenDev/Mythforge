@@ -42,7 +42,7 @@ public class GiantRat : Creature
     public override Dictionary<SavingThrow,int> SavingThrows => 
         new Fighter().GetSaveScores(1);
 
-    public override List<TreasureType> GetTreasure() => 
+    public override List<TreasureType> GetTreasure(TreasureSpawnContext context) => 
         TreasureTable.C.Roll();
 
     public override void Attack(Entity target)

@@ -43,7 +43,10 @@ public class ClassJsonConverter : JsonConverter
     public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
     {
         if (reader.Value == null) return null;
-        return Activator.CreateInstance(Type.GetType(reader.Value.ToString()));
+        var typeName = reader.Value.ToString();
+        if (string.IsNullOrEmpty(typeName)) return null;
+        var type = Type.GetType(typeName);
+        return type == null ? null : Activator.CreateInstance(type);
     }
 
     public override bool CanConvert(Type objectType)
