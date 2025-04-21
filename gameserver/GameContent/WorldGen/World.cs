@@ -1,69 +1,66 @@
-﻿using System.Drawing;
-using GameContent.Util;
-using SimplexNoise;
+using System.Numerics;
+using DelaunatorSharp;
 
 namespace GameContent.WorldGen;
 
+public class Position : IPoint
+{
+    public double X { get; set; }
+    public double Y { get; set; }
+}
+
+public class Location
+{
+    public required Position Position;
+    public required Biome Biome;
+
+    public readonly List<Location> Connections = [];
+}
+
+// public abstract class LocationFeature {}
+// public abstract class LairFeature : LocationFeature {}
+// public abstract class DungeonFeature : LocationFeature {}
+// public abstract class LocationFeature {}
+// public abstract class LocationFeature {}
+
 public class World
 {
-    private static Dictionary<Point, Location> Locations { get; } = [];
     private World() {}
-    
-    public static World Generate(int numLocations)
+
+    public readonly Dictionary<Position, Location> Locations = [];
+
+    public static World Generate()
     {
         var world = new World();
 
-        List<Point> OpenList = [new Point(0, 0)]; 
-        
-        for (int i = 0; i < numLocations; i++)
+        for (int i = 0; i < 25; i++)
         {
-            var newPoint = OpenList[Random.Shared.Next(0, OpenList.Count)];
-            OpenList.Remove(newPoint);
-
-            var location = new Location
+            var pos = new Position
             {
-                Biome = GetNeighborBiome(newPoint).GenerateAdjacentBiome()
+                X = Random.Shared.NextDouble() * 100.0,
+                Y = Random.Shared.NextDouble() * 100.0
             };
-            Locations.Add(newPoint, location);
-
-            // Feature pressence
-            if (Dice.Roll(1, 6) == 1)
+            var loc = new Location
             {
-                var featureTypeRoll = Dice.Roll(1, 12);
-                var featureType = featureTypeRoll switch
-                {
-                    <= 2 => FeatureType.RuinsAndRelics,
-                    <= 4 => FeatureType.LuridLairs,
-                    <= 6 => FeatureType.RiversAndRoads,
-                    <= 8 => FeatureType.CastlesAndCitadels,
-                    <= 10 => FeatureType.TemplesAndShrines,
-                    _ => FeatureType.VillagesAndTowns
-                };
+                Position = pos,
+                Biome = Biome.Random(),
             };
+            world.Locations.Add(pos, loc);
             
+            // Generate features
+            // Lair, Dungeon, Settlement, Landmark
+            // Natural resources
         }
-        
-        return world;
-    }
 
-    private static Biome GetNeighborBiome(Point point)
-    {
-        List<Biome> biomes = [];
-        GetNeighbors(point).ForEach(p =>
+        var d = new Delaunator(world.Locations.Keys.ToArray<IPoint>());
+        d.ForEachTriangleEdge((edge) =>
         {
-            if(Locations.TryGetValue(p, out Location? location))
-                biomes.Add(location.Biome);
+            var p = world.Locations[(Position)edge.P];
+            var q = world.Locations[(Position)edge.Q];
+            p.Connections.Add(q);
+            q.Connections.Add(p);
         });
-        return biomes.Count > 0 ? biomes[Random.Shared.Next(0, biomes.Count)] : Biome.Plains;
-    }
 
-    private static List<Point> GetNeighbors(Point point)
-    {
-        return [
-            new Point(point.X - 1, point.Y),
-            new Point(point.X + 1, point.Y),
-            new Point(point.X, point.Y - 1),
-            new Point(point.X, point.Y + 1)
-        ];
+        return world;
     }
 }

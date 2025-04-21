@@ -143,3 +143,28 @@ public class MagicItemsTreasure : TreasureType
         
     }
 }
+
+public class PotionTreasure : TreasureType {}
+public class ScrollTreasure : TreasureType {}
+public class WandStaffRodTreasure : TreasureType {}
+
+
+public class MagicWeaponTreasure : TreasureType
+{
+    
+}
+
+public class MagicArmorTreasure : TreasureType
+{
+    
+}
+
+public class MagicRingTreasure : TreasureType
+{
+    
+}
+
+public class MiscMagicTreasure : TreasureType
+{
+    
+}
