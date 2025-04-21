@@ -1,5 +1,6 @@
 using System.Numerics;
 using DelaunatorSharp;
+using GameContent.Util;
 
 namespace GameContent.WorldGen;
 
@@ -17,11 +18,41 @@ public class Location
     public readonly List<Location> Connections = [];
 }
 
-// public abstract class LocationFeature {}
-// public abstract class LairFeature : LocationFeature {}
-// public abstract class DungeonFeature : LocationFeature {}
-// public abstract class LocationFeature {}
-// public abstract class LocationFeature {}
+public abstract class LocationFeature {}
+public abstract class LairFeature : LocationFeature {}
+public abstract class DungeonFeature : LocationFeature {}
+public abstract class LandmarkFeature : LocationFeature
+{
+    public LandmarkFeature()
+    {
+        LandmarkNature nature = Dice.Roll(1, 6) switch
+        {
+            <= 3 => new Natural(),
+            <= 5 => new Artifical(),
+            <= 6 => new Magic(),
+        };
+
+
+    }
+
+    private abstract class LandmarkNature {}
+    private class Natural : LandmarkNature {
+        // public Natural() {
+        //     var type = Dice.Roll(1, 6) switch {
+        //         1 => 
+        //     };
+        // }
+    }
+    private class Artifical : LandmarkNature {}
+    private class Magic : LandmarkNature {}
+
+    private abstract class LandmarkFind {}
+    private class Hazard : LandmarkFind {}
+    private class Empty : LandmarkFeature {}
+    private class Special : LandmarkFeature {}
+    private class Monsters : LandmarkFind {}
+}
+public abstract class SettlementFeature : LocationFeature {}
 
 public class World
 {

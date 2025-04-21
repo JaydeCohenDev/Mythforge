@@ -13,4 +13,31 @@ public static class Dice
         
         return total;
     }
+    public static Action Select(int num, int sides, List<Tuple<int, Action>> options)
+    {
+        var roll = Roll(num, sides);
+        foreach(var result in options)
+            if(roll <= result.Item1)
+                return result.Item2;
+
+        throw new IndexOutOfRangeException();
+    }
 }
+
+// public class RollTable<T> 
+// {
+//     private Dictionary<int, T> _items = [];
+
+//     public RollTable<T>(Dictionary<string, T> items)
+//     {
+//         foreach(var item in items)
+//         {
+
+//         }
+//     }
+
+//     public T Roll() 
+//     {
+
+//     }
+// }
